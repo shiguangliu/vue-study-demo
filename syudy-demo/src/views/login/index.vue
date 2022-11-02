@@ -2,17 +2,17 @@
     <div class="login">
         <p>登录</p>
         <div>
-            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px"
+            <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="100px"
                 class="demo-ruleForm">
                 <el-form-item label="账号" prop="username">
-                    <el-input  v-model="ruleForm.username" autocomplete="off"></el-input>
+                    <el-input  v-model="loginForm.username" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+                    <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                    <el-button type="primary" @click="submitForm('loginForm')">提交</el-button>
+                    <el-button @click="resetForm('loginForm')">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -39,7 +39,7 @@ export default {
             }
         };
         return {
-            ruleForm: {
+            loginForm: {
                 username: '',
                 password: ''
             },
@@ -57,9 +57,11 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    alert('登录成功!');
+                    // 登录成功后跳转页面
+                    this.$router.push("./home")
                 } else {
-                    console.log('error submit!!');
+                    console.log('登录失败');
                     return false;
                 }
             });
@@ -70,3 +72,7 @@ export default {
     }
 }
 </script>
+
+<style>
+
+</style>
