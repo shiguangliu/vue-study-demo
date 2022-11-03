@@ -43,7 +43,7 @@ export default {
                 username: '',
                 password: ''
             },
-            rules: {
+            rules: {    
                 username: [
                     { validator: checkUserName, trigger: 'blur' }
                 ],
