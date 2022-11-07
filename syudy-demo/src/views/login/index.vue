@@ -1,18 +1,17 @@
 <template>
     <div class="login">
-        <p>登录</p>
+        <h1>登录</h1>
         <div>
             <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="100px"
                 class="demo-ruleForm">
-                <el-form-item label="账号" prop="username">
-                    <el-input  v-model="loginForm.username" autocomplete="off"></el-input>
+                <el-form-item prop="username">
+                    <el-input type="text" placeholder="账号" v-model="loginForm.username" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
+                <el-form-item prop="password">
+                    <el-input type="password" placeholder="密码" v-model="loginForm.password" autocomplete="on"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('loginForm')">提交</el-button>
-                    <el-button @click="resetForm('loginForm')">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -65,14 +64,20 @@ export default {
                     return false;
                 }
             });
-        },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
         }
     }
 }
 </script>
 
 <style>
-
+    .login{
+        text-align: center;
+        position: absolute;
+        top: 20%;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        width: 25%;
+    }
 </style>
