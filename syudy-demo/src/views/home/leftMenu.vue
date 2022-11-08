@@ -15,7 +15,12 @@
                 <span>数据管理</span>
             </el-menu-item>
             <el-sub-menu index="/wms">
-                <template #title>信息管理</template>
+                <template #title>
+                    <el-icon>
+                        <Calendar />
+                    </el-icon>
+                    <span>信息管理</span>
+                </template>
                 <el-menu-item index="/wms/list">列表管理</el-menu-item>
             </el-sub-menu>
         </el-menu>
@@ -24,9 +29,8 @@
   
 <script  setup>
 import {
-    Document,
+    Calendar,
     Menu as IconMenu,
-    Location,
     Setting,
 } from '@element-plus/icons-vue'
 
