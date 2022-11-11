@@ -1,11 +1,14 @@
 <template>
-    <div class="about">
+    <div class="common-layout">
         <el-container>
             <!-- 左侧导航 -->
             <LeftMenu />
             <el-container>
+                <!-- 右侧主体 -->
+                <!-- 头部 -->
                 <el-header>Header</el-header>
-                <el-main>Main</el-main>
+                <!-- 主体 -->
+                <el-main><router-view /></el-main>
             </el-container>
         </el-container>
     </div>
