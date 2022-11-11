@@ -37,6 +37,12 @@ export default {
                     "..//public/1.png",
                     "..//public/6.png",
                     "..//public/4.jpeg",
+                ims,
+                    "../static/2.png",
+                    "../static/3.png",
+                    "../static/4.jpeg",
+                    "../static/5.jpeg",
+                    "../static/6.png"
                 ]
             }
         },
@@ -46,14 +52,14 @@ export default {
     }
 </script>
 
-  <style scoped>
-  .el-carousel__item h3 {
+<style scoped>
+  /* .el-carousel__item h3 {
     color: #475669;
     opacity: 0.75;
     line-height: 200px;
     margin: 0;
     text-align: center;
-  }
+  } */
   
   .el-carousel__item:nth-child(2n) {
     background-color: #99a9bf;
@@ -84,5 +90,5 @@ export default {
   width: 100%;
   display: block;
 }
-  </style>
+</style>
   
