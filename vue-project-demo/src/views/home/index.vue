@@ -1,14 +1,15 @@
 <template>
-    <div class="common-layout">
+    <div class="about">
         <el-container>
-            <!-- 左侧导航 -->
-            <LeftMenu />
-            <!-- <el-aside width="200px">Aside</el-aside> -->
+            <el-aside width="200px">
+                 <!-- 左侧导航 -->
+                <LeftMenuVue />
+            </el-aside>
             <el-container>
                 <!-- 右侧主体 -->
-                <!-- 头部 -->
+                 <!-- 头部 -->
                 <el-header>Header</el-header>
-                <!-- 主体 -->
+                 <!-- 主体 -->
                 <el-main><router-view /></el-main>
             </el-container>
         </el-container>
@@ -16,18 +17,14 @@
 </template>
 
 <script>
-import LeftMenu from './leftMenu.vue'
+import LeftMenuVue from './leftMenu.vue';
 export default {
     data() {
-        return {
-
-        }
+        return {};
     },
-    methods: {
-
-    },
-    components: {
-        LeftMenu
+    methods: {},
+    components:{
+        LeftMenuVue
     }
 }
 </script>
