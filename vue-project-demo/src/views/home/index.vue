@@ -8,7 +8,9 @@
             <el-container>
                 <!-- 右侧主体 -->
                  <!-- 头部 -->
-                <el-header>Header</el-header>
+                <el-header>
+                    <el-button class="exit" type="primary" @click="exit()">退出</el-button>
+                </el-header>
                  <!-- 主体 -->
                 <el-main><router-view /></el-main>
             </el-container>
@@ -22,7 +24,11 @@ export default {
     data() {
         return {};
     },
-    methods: {},
+    methods: {
+        exit(){
+            this.$router.push("./login")
+        }
+    },
     components:{
         LeftMenuVue
     }
