@@ -36,13 +36,7 @@ export default {
                     "..//public/2.png",
                     "..//public/1.png",
                     "..//public/6.png",
-                    "..//public/4.jpeg",
-                ims,
-                    "../static/2.png",
-                    "../static/3.png",
-                    "../static/4.jpeg",
-                    "../static/5.jpeg",
-                    "../static/6.png"
+                    "..//public/4.jpeg"
                 ]
             }
         },
