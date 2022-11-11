@@ -25,17 +25,17 @@ const routes = [
           component: () => import('../views/home/index/index.vue')
       },
       {
-          path: '/stats',
+          path: '/stats', // 数据管理
           name: 'stats',
           component: () => import('../views/home/stats/index.vue')
       },
       {
-          path: '/wms',
+          path: '/wms', // 信息管理
           name: 'wms',
           component: () => import('../views/home/wms/index.vue'),
           children: [
               {
-                  path: '/wms/list',
+                  path: '/wms/list', // 信息列表
                   name: 'wmsList',
                   component: () => import('../views/home/wms/list.vue')
               }

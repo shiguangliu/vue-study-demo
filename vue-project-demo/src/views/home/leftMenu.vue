@@ -18,7 +18,6 @@
                                 <i class="el-icon-document"></i> 信息管理</template>
                             <el-menu-item index="/wms/list">列表管理</el-menu-item>
                         </el-submenu>
-
                     </el-menu>
                 </el-row>
             </el-aside>
