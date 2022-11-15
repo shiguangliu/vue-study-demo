@@ -1,17 +1,27 @@
-import axios from 'axios'
+// import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost/:8090';
+// axios.defaults.baseURL = 'http://localhost/:8090';
 
-// 请求拦截器
-axios.interceptors.request.use(config => {
-    return config
-})
+// // 请求拦截器
+// axios.interceptors.request.use(config => {
+//     return config
+// })
 
-// 响应拦截器
-axios.interceptors.response.use(res => {
-    return res
-},err => {
-    return Promise.reject(err)
-})
+// // 响应拦截器
+// axios.interceptors.response.use(res => {
+//     return res
+// },err => {
+//     return Promise.reject(err)
+// })
 
-export default axios;
+// export default axios;
+
+import axios from '@/utils/request'
+
+export function login(params){
+    return axios({
+        url: "",
+        method: "post",
+        params
+    })
+}

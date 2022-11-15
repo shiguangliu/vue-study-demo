@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import axios from '@/api'
+import { login } from '@/api'
 export default {
     data() {
         return {
@@ -39,15 +39,21 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    // 调用接口
-                    axios.post('/login').then(res => {
-                        console.log(res)
-                    }).catch(err => {
-                        console.log(err)
+                    // 调用登录接口
+                    login(this.ruleForm).then(res => {
+                        if (res.data.code === 200) {
+                            this.$message({
+                                message: '登录成功',
+                                type: 'success'
+                            });
+                            this.$router.push("./home")
+                        } else {
+                            this.$message({
+                                message: '登录失败',
+                                type: 'error'
+                            });
+                        }
                     })
-                    alert('登录成功!');
-                    // 登录成功后跳转页面
-                    this.$router.push("./home")
                 } else {
                     console.log('error submit!!');
                     return false;
