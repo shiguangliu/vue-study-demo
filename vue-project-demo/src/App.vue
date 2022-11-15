@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <router-view/>
+    <!-- 路由占位符 -->
+    <router-view />
   </div>
 </template>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
