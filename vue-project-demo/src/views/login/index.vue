@@ -6,15 +6,15 @@
                 <img src="../../assets/logo.png" alt="">
             </div>
             <!-- 登录表单区域 -->
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form :model="loginForm" :rules="loginFormRules" ref="loginFormRef" label-width="60px" class="login_form">
                 <el-form-item label="账号" prop="username">
-                    <el-input v-model="ruleForm.username"></el-input>
+                    <el-input prefix-icon="el-icon-user" v-model="loginForm.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="ruleForm.password"></el-input>
+                    <el-input prefix-icon="el-icon-date" type="password" v-model="loginForm.password"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                <el-form-item class="btns">
+                    <el-button type="primary" @click="submitForm()">登录</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -26,11 +26,11 @@ import { login } from '@/api'
 export default {
     data() {
         return {
-            ruleForm: {
-                username: '',
-                password: ''
+            loginForm: {
+                username: '11111',
+                password: '111111'
             },
-            rules: {
+            loginFormRules: {
                 username: [
                     { required: true, message: '请输入账号', trigger: 'blur' },
                 ],
@@ -42,29 +42,31 @@ export default {
         };
     },
     methods: {
-        submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
+        submitForm() {
+            this.$refs.loginFormRef.validate((valid) => {
+                if (valid){
+                    localStorage.setItem('token', "1")
+                    // 跳转到首页
+                    this.$router.push('./home')
                     // 调用登录接口
-                    login(this.ruleForm).then(res => {
-                        if (res.data.code === 200) {
-                            this.$message({
-                                message: '登录成功',
-                                type: 'success'
-                            });
-                            this.$router.push("./home")
-                        } else {
-                            this.$message({
-                                message: '登录失败',
-                                type: 'error'
-                            });
-                        }
-                    })
-                } else {
+                    // login(this.loginForm).then(res => {
+                    //     if (res.data.code === 200) {
+                    //         // 登录成功
+                    //         this.$message.success('登录成功')
+                    //         // window.sessionStorage.setItem('token', res.data.data.token)
+                    //         // 保存token
+                    //         localStorage.setItem('token', res.data.data.token)
+                    //         // 跳转到首页
+                    //         this.$router.push('./home')
+                    //     } else {
+                    //         this.$message.error(res.data.msg)
+                    //     }
+                    // })
+                }else{
                     console.log('error submit!!');
                     return false;
                 }
-            });
+            })
         }
     }
 }
@@ -106,5 +108,18 @@ export default {
             background-color: #ddd;
         }
     }
+}
+
+.login_form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.btns {
+    display: flex;
+    justify-content: flex-end;
 }
 </style>

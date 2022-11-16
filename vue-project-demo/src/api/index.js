@@ -18,10 +18,10 @@
 
 import axios from '@/utils/request'
 
-export function login(params){
+export function login(data){
     return axios({
-        url: "",
+        url: "/user/login",
         method: "post",
-        params
+        data
     })
 }
