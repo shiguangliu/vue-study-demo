@@ -8,6 +8,9 @@ const service = axios.create({
 // 添加请求拦截器
 // 在发送请求前做些什么
 service.interceptors.request.use(config => {
+    console.log(config)
+    // config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+    config.headers.Authorization = 'Bearer ' + localStorage.getItem('token')
     return config;
 })
 

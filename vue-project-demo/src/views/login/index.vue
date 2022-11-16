@@ -6,7 +6,8 @@
                 <img src="../../assets/logo.png" alt="">
             </div>
             <!-- 登录表单区域 -->
-            <el-form :model="loginForm" :rules="loginFormRules" ref="loginFormRef" label-width="60px" class="login_form">
+            <el-form :model="loginForm" :rules="loginFormRules" ref="loginFormRef" label-width="60px"
+                class="login_form">
                 <el-form-item label="账号" prop="username">
                     <el-input prefix-icon="el-icon-user" v-model="loginForm.username"></el-input>
                 </el-form-item>
@@ -22,7 +23,7 @@
 </template>
 
 <script>
-import { login } from '@/api'
+import { login } from '@/api/login'
 export default {
     data() {
         return {
@@ -44,7 +45,7 @@ export default {
     methods: {
         submitForm() {
             this.$refs.loginFormRef.validate((valid) => {
-                if (valid){
+                if (valid) {
                     localStorage.setItem('token', "1")
                     // 跳转到首页
                     this.$router.push('./home')
@@ -62,7 +63,7 @@ export default {
                     //         this.$message.error(res.data.msg)
                     //     }
                     // })
-                }else{
+                } else {
                     console.log('error submit!!');
                     return false;
                 }
