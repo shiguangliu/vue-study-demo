@@ -37,7 +37,10 @@
                 </el-menu>
             </el-aside>
             <!-- 右侧内容区域 -->
-            <el-main>Main</el-main>
+            <el-main>
+                <!-- 路由占位区域 -->
+                <router-view />
+            </el-main>
         </el-container>
     </el-container>
 </template>

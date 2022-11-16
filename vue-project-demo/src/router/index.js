@@ -17,7 +17,14 @@ const router = new VueRouter({
     {
       path: '/home', // 首页
       name: 'home',
-      component: () => import('../views/home/index.vue')
+      component: () => import('../views/home/index.vue'),
+      redirect: '/welcome',
+      children: [
+        {
+          path: '/welcome', // 首页
+          component: () => import('../views/home/welcome.vue')
+        }
+      ]
     }
   ]
 })
