@@ -23,6 +23,10 @@ const router = new VueRouter({
         {
           path: '/welcome', // 首页
           component: () => import('../views/home/welcome.vue')
+        },
+        {
+          path: '/users', // 用户列表
+          component: () => import('../views/user/index.vue')
         }
       ]
     }

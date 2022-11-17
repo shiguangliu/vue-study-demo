@@ -14,7 +14,7 @@
             <el-aside :width="this.isCollapse ? '64px' : '200px'">
                 <div class="toggle-button" @click="toggleCollapse()">|||</div>
                 <!-- 菜单栏 -->
-                <el-menu background-color="#0b1118" text-color="#fff" active-text-color="#409EFF" unique-opened :collapse="this.isCollapse" :collapse-transition="false">
+                <el-menu background-color="#0b1118" text-color="#fff" active-text-color="#409EFF" unique-opened :collapse="this.isCollapse" :collapse-transition="false" router :default-active="this.activePath">
                     <!-- 一级菜单 -->
                     <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
                         <!-- 一级菜单的模版区域 -->
@@ -25,7 +25,7 @@
                             <span>{{ item.authName }}</span>
                         </template>
                         <!-- 一级菜单下的二级菜单 -->
-                        <el-menu-item :index="subItem.id + ''" v-for="subItem in item.children" :key="subItem.id">
+                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id" @click="saveNavState('/' + subItem.path)">
                             <template slot="title">
                                 <!-- 图标 -->
                                 <i class="el-icon-star-on"></i>
@@ -49,28 +49,37 @@
 export default {
     created() {
         // 进入页面时，加载菜单
-        this.getMenuList()
+        this.getMenuList(),
+        this.activePath = localStorage.getItem('activePath')
     },
     data() {
         return {
             menuList: [],
             username: 'admin',
             // 菜单栏是否折叠
-            isCollapse: false
+            isCollapse: false,
+            // 被激活的链接地址
+            activePath: ''
         };
     },
     methods: {
         // 获取菜单列表
         getMenuList() {
             this.menuList = [
-                {
+            {
                     id: 1,
+                    authName: '首页',
+                    path: null,
+                    icon: 'el-icon-user-solid'
+                },
+                {
+                    id: 2,
                     authName: '用户管理',
                     path: null,
                     icon: 'el-icon-user-solid',
                     children: [
                         {
-                            id: 4,
+                            id: 5,
                             authName: '用户列表',
                             path: 'users',
                             children: null
@@ -78,19 +87,19 @@ export default {
                     ]
                 },
                 {
-                    id: 2,
+                    id: 3,
                     authName: '权限管理',
                     path: null,
                     icon: 'el-icon-circle-plus',
                     children: [
                         {
-                            id: 5,
+                            id: 6,
                             authName: '角色列表',
                             path: 'roles',
                             children: null
                         },
                         {
-                            id: 6,
+                            id: 7,
                             authName: '权限列表',
                             path: 'rights',
                             children: null
@@ -98,25 +107,25 @@ export default {
                     ]
                 },
                 {
-                    id: 3,
+                    id: 4,
                     authName: '商品管理',
                     path: null,
                     icon: 'el-icon-goods',
                     children: [
                         {
-                            id: 7,
+                            id: 8,
                             authName: '商品列表',
                             path: 'goods',
                             children: null
                         },
                         {
-                            id: 8,
+                            id: 9,
                             authName: '分类参数',
                             path: 'params',
                             children: null
                         },
                         {
-                            id: 9,
+                            id: 10,
                             authName: '商品分类',
                             path: 'categories',
                             children: null
@@ -124,14 +133,14 @@ export default {
                     ]
                 },
                 {
-                    id: 10,
+                    id: 11,
                     authName: '订单管理',
                     path: 'orders',
                     icon: 'el-icon-s-order',
                     children: null
                 },
                 {
-                    id: 11,
+                    id: 12,
                     authName: '数据统计',
                     path: 'reports',
                     icon: 'el-icon-s-marketing',
@@ -147,6 +156,11 @@ export default {
         logout() {
             localStorage.removeItem('token')
             this.$router.push('./login')
+        },
+        saveNavState(activePath){
+            // 保存当前的导航状态
+            localStorage.setItem('activePath', activePath)
+            this.activePath = activePath
         }
     }
 }
