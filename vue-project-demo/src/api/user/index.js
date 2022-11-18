@@ -9,6 +9,15 @@ export function getUserListApi(data) {
     })
 }
 
+// 查询用户详情
+export function getUserInfoApi(data) {
+    return axios({
+        url: "/user/info",
+        method: "post",
+        data
+    })
+}
+
 // 新增用户
 export function addUserApi(data) {
     return axios({
