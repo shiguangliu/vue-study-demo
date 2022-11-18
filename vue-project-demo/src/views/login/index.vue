@@ -28,8 +28,8 @@ export default {
     data() {
         return {
             loginForm: {
-                username: '11111',
-                password: '111111'
+                username: '',
+                password: ''
             },
             loginFormRules: {
                 username: [
@@ -48,16 +48,20 @@ export default {
                 if (valid) {
                     // 调用登录接口
                     login(this.loginForm).then(res => {
-                        if (res.data.code === 200) {
+                        if (res.code === 200) {
                             // 登录成功
                             this.$message.success('登录成功')
                             // window.sessionStorage.setItem('token', res.data.data.token)
                             // 保存token
-                            localStorage.setItem('token', res.data.data.token)
+                            localStorage.setItem('token', res.data.oauth2TokenDto.token)
+                            // 保存用户id
+                            localStorage.setItem('userId', res.data.userId)
+                            // 保存用户名称
+                            localStorage.setItem('username', res.data.userName)
                             // 跳转到首页
                             this.$router.push('./home')
                         } else {
-                            this.$message.error(res.data.msg)
+                            this.$message.error(res.data.message)
                         }
                     })
                 } else {

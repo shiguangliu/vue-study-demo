@@ -55,7 +55,7 @@ export default {
     data() {
         return {
             menuList: [],
-            username: 'admin',
+            username: localStorage.getItem('username'),
             // 菜单栏是否折叠
             isCollapse: false,
             // 被激活的链接地址

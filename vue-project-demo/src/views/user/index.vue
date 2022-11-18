@@ -12,10 +12,10 @@
 
             <el-row :gutter="20">
                 <el-col :span="6">
-                    <el-input placeholder="请输入姓名" v-model="queryInfo.userName" />
+                    <el-input placeholder="请输入姓名" v-model="queryInfo.username" />
                 </el-col>
                 <el-col :span="6">
-                    <el-input placeholder="请输入手机号码" v-model="queryInfo.mobile" />
+                    <el-input placeholder="请输入手机号码" v-model="queryInfo.phone" />
                 </el-col>
                 <el-col :span="6">
                     <el-select v-model="queryInfo.status" placeholder="请选择状态">
@@ -36,17 +36,18 @@
             <!-- 表格区域 -->
             <el-table :data="this.userList" :border="true" style="width: 100%">
                 <el-table-column prop="id" label="id" width="50px" />
-                <el-table-column prop="userName" label="姓名" width="120px" />
-                <el-table-column prop="mobile" label="电话号码" width="120px" />
+                <el-table-column prop="username" label="姓名" width="120px" />
+                <el-table-column prop="phone" label="电话号码" width="140px" />
                 <el-table-column prop="email" label="邮箱" />
-                <el-table-column prop="status" label="状态" width="60px">
+                <el-table-column prop="status" label="状态" width="80px">
                     <template slot-scope="scope">
                         {{ scope.row.status == 1 ? '启用' : '停用' }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="createTime" label="创建时间" width="160px" />
-                <el-table-column prop="updateTime" label="修改时间" width="160px" />
-                <el-table-column label="操作" width="170px">
+                <el-table-column prop="loginTime" label="上次登录时间" />
+                <el-table-column prop="createTime" label="创建时间" />
+                <el-table-column prop="updateTime" label="修改时间" />
+                <el-table-column label="操作" width="200px">
                     <template slot-scope="scope">
                         <el-button type="primary" size="mini" @click="handleClick('edit', scope.row.id)"><i
                                 class="el-icon-edit">编辑</i></el-button>
@@ -66,11 +67,11 @@
             <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
                 <!-- 内容主题区域 -->
                 <el-form :model="addUserInfo" :rules="addUserInfoRules" ref="addUserInfoRef" label-width="70px">
-                    <el-form-item label="用户名" prop="userName">
-                        <el-input v-model="addUserInfo.userName"></el-input>
+                    <el-form-item label="用户名" prop="username">
+                        <el-input v-model="addUserInfo.username"></el-input>
                     </el-form-item>
-                    <el-form-item label="手机号码" prop="mobile">
-                        <el-input v-model="addUserInfo.mobile"></el-input>
+                    <el-form-item label="手机号码" prop="phone">
+                        <el-input v-model="addUserInfo.phone"></el-input>
                     </el-form-item>
                     <el-form-item label="邮箱" prop="email">
                         <el-input v-model="addUserInfo.email"></el-input>
@@ -89,11 +90,11 @@
                     <el-form-item label="用户id">
                         <el-input v-model="editUserInfo.id" disabled />
                     </el-form-item>
-                    <el-form-item label="用户名" prop="userName">
-                        <el-input v-model="editUserInfo.userName"></el-input>
+                    <el-form-item label="用户名" prop="username">
+                        <el-input v-model="editUserInfo.username" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="手机号码" prop="mobile">
-                        <el-input v-model="editUserInfo.mobile"></el-input>
+                    <el-form-item label="手机号码" prop="phone">
+                        <el-input v-model="editUserInfo.phone"></el-input>
                     </el-form-item>
                     <el-form-item label="邮箱" prop="email">
                         <el-input v-model="editUserInfo.email"></el-input>
@@ -123,13 +124,13 @@ export default {
             }
             callback()
         }
-        var checkMobile = (rule, value, callback) => {
+        var checkPhone = (rule, value, callback) => {
             if (!value) {
                 callback()
             }
             // 验证手机号的正则表达式
-            const regMobile = /^1[3|4|5|7|8][0-9]{9}$/
-            if (!regMobile.test(value)) {
+            const regPhone = /^1[3|4|5|7|8][0-9]{9}$/
+            if (!regPhone.test(value)) {
                 callback(new Error('请输入正确的手机号'))
             }
             callback()
@@ -137,8 +138,8 @@ export default {
         return {
             // 获取用户列表的参数对象
             queryInfo: {
-                userName: '',
-                mobile: '',
+                username: '',
+                phone: '',
                 status: '',
                 pageNum: 1,
                 pageSize: 10
@@ -146,6 +147,7 @@ export default {
             total: 0,
             userList: [],
             userStatusList: [
+                { id: '', name: '请选择' },
                 { id: 1, name: '启用' },
                 { id: 2, name: '停用' }
             ],
@@ -154,24 +156,24 @@ export default {
             // 控制修改用户对话框的显示与隐藏
             editDialogVisible: false,
             addUserInfo: {
-                userName: '',
-                mobile: '',
+                username: '',
+                phone: '',
                 email: ''
             },
             editUserInfo: {
                 id: '',
-                userName: '',
-                mobile: '',
+                username: '',
+                phone: '',
                 email: ''
             },
             // 添加用户表单验证规则
             addUserInfoRules: {
-                userName: [
+                username: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
                     { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                 ],
-                mobile: [
-                    { validator: checkMobile, trigger: 'blur' }
+                phone: [
+                    { validator: checkPhone, trigger: 'blur' }
                 ],
                 email: [
                     { validator: checkEmail, trigger: 'blur' }
@@ -184,91 +186,15 @@ export default {
     },
     methods: {
         getUserList() {
-            this.userList = [
-                {
-                    id: 1,
-                    userName: 'admin',
-                    mobile: '13800138000',
-                    email: '',
-                    createTime: '2020-01-01 12:00:00',
-                    updateTime: '2020-01-01 12:00:00',
-                    status: 2
-                },
-                {
-                    id: 2,
-                    userName: 'admin',
-                    mobile: '13800138000',
-                    email: '',
-                    createTime: '2020-01-01 12:00:00',
-                    updateTime: '2020-01-01 12:00:00',
-                    status: 1
-                },
-                {
-                    id: 3,
-                    userName: 'admin',
-                    mobile: '13800138000',
-                    email: '',
-                    createTime: '2020-01-01 12:00:00',
-                    updateTime: '2020-01-01 12:00:00',
-                    status: 1
-                },
-                {
-                    id: 4,
-                    userName: 'admin',
-                    mobile: '13800138000',
-                    email: '',
-                    createTime: '2020-01-01 12:00:00',
-                    updateTime: '2020-01-01 12:00:00',
-                    status: 1
-                },
-                {
-                    id: 5,
-                    userName: 'admin',
-                    mobile: '13800138000',
-                    email: '',
-                    createTime: '2020-01-01 12:00:00',
-                    updateTime: '2020-01-01 12:00:00',
-                    status: 1
-                },
-                {
-                    id: 6,
-                    userName: 'admin',
-                    mobile: '13800138000',
-                    email: '',
-                    createTime: '2020-01-01 12:00:00',
-                    updateTime: '2020-01-01 12:00:00',
-                    status: 1
-                },
-                {
-                    id: 7,
-                    userName: 'admin',
-                    mobile: '13800138000',
-                    email: '',
-                    createTime: '2020-01-01 12:00:00',
-                    updateTime: '2020-01-01 12:00:00',
-                    status: 1
-                },
-                {
-                    id: 8,
-                    userName: 'admin',
-                    mobile: '13800138000',
-                    email: '',
-                    createTime: '2020-01-01 12:00:00',
-                    updateTime: '2020-01-01 12:00:00',
-                    status: 1
-                }
-            ],
-                this.queryInfo.pageNum = 1
-            this.queryInfo.pageSize = 10
-            this.total = 8
             // 获取用户列表
-            // getUserListApi(this.queryInfo).then(res => {
-            //     if (res.data.code === 200) {
-            //         this.userList = res.data
-            //     } else {
-            //         this.$message.error(res.data.msg)
-            //     }
-            // })
+            getUserListApi(this.queryInfo).then(res => {
+                console.log(res)
+                if (res.code === 200) {
+                    this.userList = res.data.list
+                } else {
+                    this.$message.error(res.message)
+                }
+            })
         },
         // 分页大小改变时触发
         handleSizeChange(pageSize) {
@@ -288,37 +214,35 @@ export default {
                     this.getUserList()
                     break
                 case 'reset':
-                    this.queryInfo.userName = ''
-                    this.queryInfo.mobile = ''
+                    this.queryInfo.username = ''
+                    this.queryInfo.phone = ''
                     this.queryInfo.status = ''
                     break
                 case 'edit':
-                    this.editDialogVisible = true
-                    // const editParams = {
-                    //     'id': data,
-                    // }
-                    // getUserInfoApi(editParams).then(res => {
-                    // if (res.data.code === 200) {
-                    //     this.editUserInfo = res.data
-                    //     this.editDialogVisible = true
-                    // } else {
-                    //     this.$message.error(res.data.msg)
-                    // }})
+                    const editParams = {
+                        'id': data,
+                    }
+                    getUserInfoApi(editParams).then(res => {
+                    if (res.code === 200) {
+                        this.editUserInfo = res.data
+                        this.editDialogVisible = true
+                    } else {
+                        this.$message.error(res.message)
+                    }})
                     break
                 case 'updateStatus':
-                    this.$message.success('修改状态成功')
                     const params = {
                         'id': data.id,
                         'status': data.status == 1 ? 2 : 1
                     }
-                    // updateUserStatusApi(params).then(res => {
-                    //     if (res.data.code === 200) {
-                    //         this.$message.success(res.data.msg)
-                    //         data.status = params.status
-                    //     } else {
-                    //         this.$message.error(res.data.msg)
-                    //     }
-                    // })
+                    updateUserStatusApi(params).then(res => {
+                        if (res.code === 200) {
+                            this.$message.success(res.message)
+                            data.status = params.status
+                        } else {
+                            this.$message.error(res.message)
+                        }
+                    })
                     break
                 case 'cancelAddUser':
                     this.addDialogVisible = false
