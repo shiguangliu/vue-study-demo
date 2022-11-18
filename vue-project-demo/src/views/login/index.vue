@@ -46,23 +46,20 @@ export default {
         submitForm() {
             this.$refs.loginFormRef.validate((valid) => {
                 if (valid) {
-                    localStorage.setItem('token', "1")
-                    // 跳转到首页
-                    this.$router.push('./home')
                     // 调用登录接口
-                    // login(this.loginForm).then(res => {
-                    //     if (res.data.code === 200) {
-                    //         // 登录成功
-                    //         this.$message.success('登录成功')
-                    //         // window.sessionStorage.setItem('token', res.data.data.token)
-                    //         // 保存token
-                    //         localStorage.setItem('token', res.data.data.token)
-                    //         // 跳转到首页
-                    //         this.$router.push('./home')
-                    //     } else {
-                    //         this.$message.error(res.data.msg)
-                    //     }
-                    // })
+                    login(this.loginForm).then(res => {
+                        if (res.data.code === 200) {
+                            // 登录成功
+                            this.$message.success('登录成功')
+                            // window.sessionStorage.setItem('token', res.data.data.token)
+                            // 保存token
+                            localStorage.setItem('token', res.data.data.token)
+                            // 跳转到首页
+                            this.$router.push('./home')
+                        } else {
+                            this.$message.error(res.data.msg)
+                        }
+                    })
                 } else {
                     console.log('error submit!!');
                     return false;

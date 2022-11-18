@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Qs from 'qs'
 
 const service = axios.create({
     baseURL: "http://localhost:8010"
@@ -8,9 +9,28 @@ const service = axios.create({
 // 添加请求拦截器
 // 在发送请求前做些什么
 service.interceptors.request.use(config => {
-    console.log(config)
     // config.headers['Content-Type'] = 'application/json;charset=UTF-8'
     config.headers.Authorization = 'Bearer ' + localStorage.getItem('token')
+    if (config.method.toLowerCase() === 'post') {
+        if (config.data) {
+          config.data = {
+            ...config.data,
+            _t: Date.parse(new Date()) / 1000
+          }
+        }
+        if (config.params) {
+          config.data = Qs.stringify({
+            ...config.params,
+            _t: Date.parse(new Date()) / 1000
+          })
+          config.params = undefined
+        }
+      } else if (config.method.toLowerCase() === 'get') {
+        config.params = {
+          _t: Date.parse(new Date()) / 1000,
+          ...config.params
+        }
+      }
     return config;
 })
 
