@@ -191,6 +191,9 @@ export default {
                 console.log(res)
                 if (res.code === 200) {
                     this.userList = res.data.list
+                    this.total = res.data.total
+                    this.queryInfo.pageNum = res.data.pageNum
+                    this.queryInfo.pageSize = res.data.pageSize
                 } else {
                     this.$message.error(res.message)
                 }
