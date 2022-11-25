@@ -15,16 +15,16 @@
                 <div class="toggle-button" @click="toggleCollapse()">|||</div>
                 <!-- 菜单栏 -->
                 <el-menu background-color="#0b1118" text-color="#fff" active-text-color="#409EFF" unique-opened :collapse="this.isCollapse" :collapse-transition="false" router :default-active="this.activePath">
-                    <!-- 一级菜单 -->
-                    <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
-                        <!-- 一级菜单的模版区域 -->
-                        <template slot="title">
-                            <!-- 图标 -->
-                            <i :class="item.icon"></i>
-                            <!-- 文本 -->
-                            <span>{{ item.authName }}</span>
-                        </template>
-                        <!-- 一级菜单下的二级菜单 -->
+                    <template v-for="item in menuList">
+                        <!-- 有子菜单 -->
+                        <el-submenu :index="item.id + ''" v-if="item.children && item.children.length !== 0">
+                            <template slot="title">
+                                <!-- 图标 -->
+                                <i class="el-icon-star-on"></i>
+                                <!-- 文本 -->
+                                <span>{{ item.authName }}</span>
+                            </template>
+                            <!-- 一级菜单下的二级菜单 -->
                         <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id" @click="saveNavState('/' + subItem.path)">
                             <template slot="title">
                                 <!-- 图标 -->
@@ -33,7 +33,38 @@
                                 <span>{{ subItem.authName }}</span>
                             </template>
                         </el-menu-item>
-                    </el-submenu>
+                        </el-submenu>
+                        <!-- 没有子菜单 -->
+                        <el-menu-item :index="item.path + ''" v-else>
+                            <template slot="title">
+                                <!-- 图标 -->
+                                <i :class="item.icon"></i>
+                                <!-- 文本 -->
+                                <span>{{ item.authName }}</span>
+                            </template>
+                        </el-menu-item>
+                    </template>
+
+
+                    <!-- 一级菜单 -->
+                    <!-- <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id"> -->
+                        <!-- 一级菜单的模版区域 -->
+                        <!-- <template slot="title"> -->
+                            <!-- 图标 -->
+                            <!-- <i :class="item.icon"></i> -->
+                            <!-- 文本 -->
+                            <!-- <span>{{ item.authName }}</span> -->
+                        <!-- </template> -->
+                        <!-- 一级菜单下的二级菜单 -->
+                        <!-- <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id" @click="saveNavState('/' + subItem.path)">
+                            <template slot="title"> -->
+                                <!-- 图标 -->
+                                <!-- <i class="el-icon-star-on"></i> -->
+                                <!-- 文本 -->
+                                <!-- <span>{{ subItem.authName }}</span> -->
+                            <!-- </template> -->
+                        <!-- </el-menu-item> -->
+                    <!-- </el-submenu> -->
                 </el-menu>
             </el-aside>
             <!-- 右侧内容区域 -->
@@ -69,7 +100,7 @@ export default {
             {
                     id: 1,
                     authName: '首页',
-                    path: null,
+                    path: '/welcome',
                     icon: 'el-icon-user-solid'
                 },
                 {
@@ -154,6 +185,7 @@ export default {
         },
         // 退出登录
         logout() {
+            localStorage.removeItem('activePath')
             localStorage.removeItem('token')
             this.$router.push('./login')
         },
