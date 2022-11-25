@@ -19,6 +19,10 @@ html,body,#app{
     font-size: 12px;
 }
 
+.el-table .cell {
+    text-align: center;
+}
+
 .el-pagination {
     margin-top: 15px;
     text-align: right;
@@ -27,4 +31,8 @@ html,body,#app{
 
 .globalAddButton {
     margin-top: 15px;
+}
+
+.el-tag {
+    margin-right: 10px;
 }

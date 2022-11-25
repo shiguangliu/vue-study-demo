@@ -12,10 +12,10 @@
 
             <el-row :gutter="20">
                 <el-col :span="6">
-                    <el-input placeholder="请输入姓名" v-model="queryInfo.username" />
+                    <el-input placeholder="请输入姓名" v-model="queryInfo.username" clearable />
                 </el-col>
                 <el-col :span="6">
-                    <el-input placeholder="请输入手机号码" v-model="queryInfo.phone" />
+                    <el-input placeholder="请输入手机号码" v-model="queryInfo.phone" clearable />
                 </el-col>
                 <el-col :span="6">
                     <el-select v-model="queryInfo.status" placeholder="请选择状态">
@@ -47,11 +47,18 @@
                 <el-table-column prop="loginTime" label="上次登录时间" />
                 <el-table-column prop="createTime" label="创建时间" />
                 <el-table-column prop="updateTime" label="修改时间" />
-                <el-table-column label="操作" width="200px">
+                <el-table-column label="操作" width="350px">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="handleClick('edit', scope.row.id)"><i
-                                class="el-icon-edit">编辑</i></el-button>
-                        <el-button type="danger" size="mini" @click="handleClick('updateStatus', scope.row)">
+                        <el-button type="primary" size="mini" @click="handleClick('detail', scope.row.id)">
+                            <i class="el-icon-info">详情</i>
+                        </el-button>
+                        <el-button type="primary" size="mini" @click="handleClick('edit', scope.row.id)">
+                            <i class="el-icon-edit">编辑</i>
+                        </el-button>
+                        <el-button type="primary" size="mini" @click="handleClick('assignRole', scope.row.id)">
+                            <i class="el-icon-setting">分配角色</i>
+                        </el-button>
+                        <el-button :type="scope.row.status == 1 ?'danger':'success'" size="mini" @click="handleClick('updateStatus', scope.row)">
                             <i class="el-icon-setting">{{ scope.row.status == 1 ? '停用' : '启用' }}</i>
                         </el-button>
                     </template>
@@ -70,6 +77,10 @@
                     <el-form-item label="用户名" prop="username">
                         <el-input v-model="addUserInfo.username"></el-input>
                     </el-form-item>
+                    <el-form-item label="密码">
+                        <el-input v-model="addUserInfo.password"></el-input>
+                        <span style="color:brown">*如果不输入密码，那么则由后台自动生成默认密码</span>
+                    </el-form-item>
                     <el-form-item label="手机号码" prop="phone">
                         <el-input v-model="addUserInfo.phone"></el-input>
                     </el-form-item>
@@ -84,7 +95,7 @@
                 </span>
             </el-dialog>
             <!-- 修改用户对话框 -->
-            <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="50%" @close="addDialogClosed">
+            <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="50%">
                 <!-- 内容主题区域 -->
                 <el-form :model="editUserInfo" :rules="addUserInfoRules" ref="addUserInfoRef" label-width="70px">
                     <el-form-item label="用户id">
@@ -105,12 +116,67 @@
                     <el-button type="primary" @click="handleClick('updateUserInfo')">确 定</el-button>
                 </span>
             </el-dialog>
+
+            <!-- 用户详情对话框 -->
+            <el-dialog title="用户详情" :visible.sync="detailDialogVisible" width="50%">
+                <!-- 内容主题区域 -->
+                <el-form :model="detailUserInfo" label-width="100px">
+                    <el-form-item label="用户id">
+                        <el-input v-model="detailUserInfo.id" disabled />
+                    </el-form-item>
+                    <el-form-item label="用户名">
+                        <el-input v-model="detailUserInfo.username" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机号码">
+                        <el-input v-model="detailUserInfo.phone" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱">
+                        <el-input v-model="detailUserInfo.email" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="状态">
+                        <el-tag :type="detailUserInfo.status == 1 ? 'success' : 'danger'">
+                            {{ detailUserInfo.status == 1 ? '启用' : '停用' }}
+                        </el-tag>
+                    </el-form-item>
+                    <el-form-item label="上次登录时间">
+                        <el-input v-model="detailUserInfo.loginTime" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="创建时间">
+                        <el-input v-model="detailUserInfo.createTime" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="修改时间">
+                        <el-input v-model="detailUserInfo.updateTime" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="权限">
+                        <el-tag v-for="item in detailUserInfo.roleNameList">{{ item }}</el-tag>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
+
+            <!-- 分配权限 -->
+            <el-dialog title="分配角色" :visible.sync="roleDialogVisible" width="30%">
+                <span>已有角色:
+                    <el-tag v-for="item in userRoleList">{{ item.roleName }}</el-tag>
+                </span>
+                <div class="userRoleDialogChecked">
+                    <!-- 多选框 -->
+                    <span>可选角色:</span>
+                    <el-checkbox-group v-model="userRoleCheckedList" :min="1">
+                        <el-checkbox v-for="role in roleList" :label="role.id" :key="role.id">{{ role.name }}
+                        </el-checkbox>
+                    </el-checkbox-group>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="roleDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="handleClick('userRoleAdd')">确 定</el-button>
+                </span>
+            </el-dialog>
         </el-card>
     </div>
 </template>
 
 <script>
-import { getUserListApi, updateUserStatusApi, addUserApi, getUserInfoApi } from '@/api/user/index'
+import { getUserListApi, updateUserStatusApi, addUserApi, getUserInfoApi, editUserApi, getUserRoleApi, getAllRoleApi, addUserRoleApi } from '@/api/user/index'
 export default {
     data() {
         var checkEmail = (rule, value, callback) => {
@@ -155,8 +221,13 @@ export default {
             addDialogVisible: false,
             // 控制修改用户对话框的显示与隐藏
             editDialogVisible: false,
+            // 控制用户详情对话框的显示与隐藏
+            detailDialogVisible: false,
+            // 分配角色对话框的显示与隐藏
+            roleDialogVisible: false,
             addUserInfo: {
                 username: '',
+                password: '',
                 phone: '',
                 email: ''
             },
@@ -165,6 +236,26 @@ export default {
                 username: '',
                 phone: '',
                 email: ''
+            },
+            detailUserInfo: {
+                id: '',
+                username: '',
+                phone: '',
+                email: '',
+                status: '',
+                loginTime: '',
+                createTime: '',
+                updateTime: '',
+                roleNameList: []
+            },
+            // 保存用户角色
+            userRoleList: [],
+            roleList: [],
+            userRoleCheckedList: [],
+            // 用户添加角色
+            userRoleAddRequest:{
+                userId: '',
+                roleIds: []
             },
             // 添加用户表单验证规则
             addUserInfoRules: {
@@ -188,7 +279,6 @@ export default {
         getUserList() {
             // 获取用户列表
             getUserListApi(this.queryInfo).then(res => {
-                console.log(res)
                 if (res.code === 200) {
                     this.userList = res.data.list
                     this.total = res.data.total
@@ -221,17 +311,31 @@ export default {
                     this.queryInfo.phone = ''
                     this.queryInfo.status = ''
                     break
+                case 'detail':
+                    const detailParams = {
+                        'id': data,
+                    }
+                    getUserInfoApi(detailParams).then(res => {
+                        if (res.code === 200) {
+                            this.detailUserInfo = res.data
+                            this.detailDialogVisible = true
+                        } else {
+                            this.$message.error(res.message)
+                        }
+                    })
+                    break
                 case 'edit':
                     const editParams = {
                         'id': data,
                     }
                     getUserInfoApi(editParams).then(res => {
-                    if (res.code === 200) {
-                        this.editUserInfo = res.data
-                        this.editDialogVisible = true
-                    } else {
-                        this.$message.error(res.message)
-                    }})
+                        if (res.code === 200) {
+                            this.editUserInfo = res.data
+                            this.editDialogVisible = true
+                        } else {
+                            this.$message.error(res.message)
+                        }
+                    })
                     break
                 case 'updateStatus':
                     const params = {
@@ -253,9 +357,15 @@ export default {
                 case 'sealAddUser':
                     this.$refs.addUserInfoRef.validate((valid) => {
                         if (valid) {
-                            this.$message.success('添加用户成功')
-                            this.addDialogVisible = false
-                            this.getUserList()
+                            addUserApi(this.addUserInfo).then(res => {
+                                if (res.code === 200) {
+                                    this.$message.success('添加用户成功')
+                                    this.addDialogVisible = false
+                                    this.getUserList()
+                                } else {
+                                    this.$message.error(res.message)
+                                }
+                            })
                         } else {
                             return false
                         }
@@ -264,13 +374,58 @@ export default {
                 case 'updateUserInfo':
                     this.$refs.addUserInfoRef.validate((valid) => {
                         if (valid) {
-                            this.$message.success('修改用户信息成功')
-                            this.editDialogVisible = false
-                            this.getUserList()
+                            editUserApi(this.editUserInfo).then(res => {
+                                if (res.code === 200) {
+                                    this.$message.success('修改用户成功')
+                                    this.editDialogVisible = false
+                                    this.getUserList()
+                                } else {
+                                    this.$message.error(res.message)
+                                }
+                            })
                         } else {
                             return false
                         }
                     })
+                    break
+                case 'assignRole':
+                    // 查询用户角色
+                    const roleListParams = {
+                        'userId': data,
+                    }
+                    getUserRoleApi(roleListParams).then(res => {
+                        if (res.code === 200) {
+                            this.userRoleList = res.data.list
+                            // 获取角色id
+                            this.userRoleCheckedList = this.userRoleList.map(item => item.roleId)
+                            this.roleDialogVisible = true
+                        } else {
+                            this.$message.error(res.message)
+                        }
+                    })
+                    // 查询所有角色
+                    getAllRoleApi("").then(res => {
+                        if (res.code === 200) {
+                            this.roleList = res.data
+                        } else {
+                            this.$message.error(res.message)
+                        }
+                    })
+                    // 将用户id赋值给userRoleAddRequest
+                    this.userRoleAddRequest.userId = data
+                    break
+                case 'userRoleAdd':
+                    this.userRoleAddRequest.roleIds = this.userRoleCheckedList
+                    addUserRoleApi(this.userRoleAddRequest).then(res => {
+                        if (res.code === 200) {
+                            this.$message.success('分配角色成功')
+                            this.roleDialogVisible = false
+                            this.getUserList()
+                        } else {
+                            this.$message.error(res.message)
+                        }
+                    })
+                    break
             }
         },
         addDialogClosed() {
@@ -281,5 +436,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.userRoleDialogChecked {
+    margin-top: 20px;
 
+    .el-checkbox-group {
+        margin-top: 10px;
+    }
+}
 </style>
