@@ -23,3 +23,6 @@ npm install --registry=https://registry.npm.taobao.org
 # 运行
 npm run dev(本地)
 ```
+
+## bilibili学习网站https://www.bilibili.com/video/BV1Af4y1L7kA?p=2&vd_source=faac0c2e52329f987851035277338e12
+## 网上框架地址：https://github.com/PanJiaChen/vue-element-admin
