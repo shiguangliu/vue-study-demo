@@ -9,7 +9,7 @@ export function login(username, password, code, uuid) {
     uuid
   }
   return request({
-    url: '/login',
+    url: '/user/login',
     headers: {
       isToken: false
     },
@@ -26,7 +26,7 @@ export function register(data) {
       isToken: false
     },
     method: 'post',
-    data: data
+    data
   })
 }
 
