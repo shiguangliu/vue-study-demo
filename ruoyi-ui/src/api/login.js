@@ -31,10 +31,11 @@ export function register(data) {
 }
 
 // 获取用户详细信息
-export function getInfo() {
+export function getInfo(data) {
   return request({
-    url: '/getInfo',
-    method: 'get'
+    url: '/user/user/info',
+    method: 'post',
+    data
   })
 }
 

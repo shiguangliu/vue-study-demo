@@ -4,6 +4,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     token: getToken(),
+    userId: '',
     name: '',
     avatar: '',
     roles: [],
@@ -13,6 +14,9 @@ const user = {
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_USERID: (state, userId) => {
+      state.userId = userId
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -37,8 +41,10 @@ const user = {
       const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
         login(username, password, code, uuid).then(res => {
-          setToken(res.token)
-          commit('SET_TOKEN', res.token)
+          setToken(res.data.oauth2TokenDto.token)
+          commit('SET_TOKEN', res.data.oauth2TokenDto.token)
+          commit('SET_USERID', res.data.userId)
+          commit('SET_NAME', res.data.userName)
           resolve()
         }).catch(error => {
           reject(error)
@@ -49,17 +55,18 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        console.log('GetInfo1111')
-        getInfo().then(res => {
+        const param = {
+          id: state.userId
+        }
+        getInfo(param).then(res => {
           const user = res.user
           const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', res.roles)
+            commit('SET_ROLES', res.roleNameList)
             commit('SET_PERMISSIONS', res.permissions)
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
-          commit('SET_NAME', user.userName)
           commit('SET_AVATAR', avatar)
           resolve(res)
         }).catch(error => {
