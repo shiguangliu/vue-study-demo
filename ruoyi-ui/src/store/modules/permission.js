@@ -4,6 +4,7 @@ import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
 import InnerLink from '@/layout/components/InnerLink'
+import { getUserId } from '@/utils/auth'
 
 const permission = {
   state: {
@@ -32,13 +33,21 @@ const permission = {
     // 生成路由
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
-        // 向后端请求路由数据
-        getRouters().then(res => {
-          const sdata = JSON.parse(JSON.stringify(res.data))
-          const rdata = JSON.parse(JSON.stringify(res.data))
+        const param = {
+          userId: getUserId()
+        }
+        // 向后端请求路由数据  ssss
+        getRouters(param).then(res => {
+          const sdata = JSON.parse(JSON.stringify(res.data.items))
+          const rdata = JSON.parse(JSON.stringify(res.data.items))
+          console.log(res.data)
           const sidebarRoutes = filterAsyncRouter(sdata)
+          console.log('wwqewqewqew')
+          console.log(sidebarRoutes)
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
+          console.log(rewriteRoutes)
           const asyncRoutes = filterDynamicRoutes(dynamicRoutes);
+          console.log(asyncRoutes)
           rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
           router.addRoutes(asyncRoutes);
           commit('SET_ROUTES', rewriteRoutes)

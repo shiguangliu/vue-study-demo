@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken,setUserId,getUserId,removeUserId,setUserName,removeUserName } from '@/utils/auth'
 
 const user = {
   state: {
@@ -42,6 +42,8 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, password, code, uuid).then(res => {
           setToken(res.data.oauth2TokenDto.token)
+          setUserId(res.data.userId)
+          setUserName(res.data.userName)
           commit('SET_TOKEN', res.data.oauth2TokenDto.token)
           commit('SET_USERID', res.data.userId)
           commit('SET_NAME', res.data.userName)
@@ -56,11 +58,12 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         const param = {
-          id: state.userId
+          id: getUserId()
         }
         getInfo(param).then(res => {
-          const user = res.user
-          const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
+          // const user = res.user
+          const avatar = require("@/assets/images/profile.jpg")
+          // const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roleNameList)
             commit('SET_PERMISSIONS', res.permissions)
@@ -78,7 +81,10 @@ const user = {
     // 退出系统
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        const param = {
+          userId: getUserId()
+        }
+        logout(param).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           commit('SET_PERMISSIONS', [])
@@ -94,7 +100,11 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
+        commit('SET_USERID', '')
+        commit('SET_NAME',  '')
         removeToken()
+        removeUserId()
+        removeUserName()
         resolve()
       })
     }

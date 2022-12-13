@@ -43,10 +43,11 @@ export function getInfo(data) {
 }
 
 // 退出方法
-export function logout() {
+export function logout(data) {
   return request({
     url: USER_URL + '/exit',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 
