@@ -36,18 +36,14 @@ const permission = {
         const param = {
           userId: getUserId()
         }
-        // 向后端请求路由数据  ssss
+        console.log("获取后台菜单")
+        // 向后端请求路由数据
         getRouters(param).then(res => {
           const sdata = JSON.parse(JSON.stringify(res.data.items))
           const rdata = JSON.parse(JSON.stringify(res.data.items))
-          console.log(res.data)
           const sidebarRoutes = filterAsyncRouter(sdata)
-          console.log('wwqewqewqew')
-          console.log(sidebarRoutes)
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
-          console.log(rewriteRoutes)
           const asyncRoutes = filterDynamicRoutes(dynamicRoutes);
-          console.log(asyncRoutes)
           rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
           router.addRoutes(asyncRoutes);
           commit('SET_ROUTES', rewriteRoutes)
@@ -138,5 +134,36 @@ export const loadView = (view) => {
     return () => import(`@/views/${view}`)
   }
 }
+
+const moyiluyou = [
+  {
+    alwaysShow: true,
+    children : [
+      {
+        component: "system/user/index",
+        // hidden: false,
+        meta: {
+          icon: "user",
+          // link: null,
+          // noCache: false,
+          title: "用户管理"
+        },
+        // name: "User",
+        path: "user"
+      }
+    ],
+    // component: Layout,
+    // hidden: false,
+    meta: {
+      icon: "system",
+      // link: null,
+      // noCache: false,
+      title: "系统管理"
+    },
+    // name: 'System',
+    path: '/system',
+    // redirect: "noRedirect"
+  }
+]
 
 export default permission
