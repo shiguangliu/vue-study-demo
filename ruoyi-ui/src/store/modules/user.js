@@ -57,10 +57,10 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        const param = {
-          id: getUserId()
-        }
-        getInfo(param).then(res => {
+        // const param = {
+        //   id: getUserId()
+        // }
+        getInfo().then(res => {
           // const user = res.user
           const avatar = require("@/assets/images/profile.jpg")
           // const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
@@ -81,10 +81,10 @@ const user = {
     // 退出系统
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        const param = {
-          userId: getUserId()
-        }
-        logout(param).then(() => {
+        // const param = {
+        //   userId: getUserId()
+        // }
+        logout().then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           commit('SET_PERMISSIONS', [])

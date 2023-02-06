@@ -4,7 +4,7 @@ import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
 import InnerLink from '@/layout/components/InnerLink'
-import { getUserId } from '@/utils/auth'
+// import { getUserId } from '@/utils/auth'
 
 const permission = {
   state: {
@@ -33,12 +33,12 @@ const permission = {
     // 生成路由
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
-        const param = {
-          userId: getUserId()
-        }
+        // const param = {
+        //   userId: getUserId()
+        // }
         console.log("获取后台菜单")
         // 向后端请求路由数据
-        getRouters(param).then(res => {
+        getRouters().then(res => {
           const sdata = JSON.parse(JSON.stringify(res.data.items))
           const rdata = JSON.parse(JSON.stringify(res.data.items))
           const sidebarRoutes = filterAsyncRouter(sdata)
