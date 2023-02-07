@@ -36,7 +36,6 @@ const permission = {
         // const param = {
         //   userId: getUserId()
         // }
-        console.log("获取后台菜单")
         // 向后端请求路由数据
         getRouters().then(res => {
           const sdata = JSON.parse(JSON.stringify(res.data.items))

@@ -1,5 +1,71 @@
 import request from '@/utils/request'
 
+// 后台服务API路由
+const USER_URL = process.env.VUE_APP_BASE_API
+
+// 查询所有权限
+export function all(data) {
+  return request({
+    url: USER_URL + '/role/all',
+    method: 'post',
+    data
+  })
+}
+
+// 查询角色列表
+export function list(data) {
+  return request({
+    url: USER_URL + '/role/list',
+    method: 'post',
+    data
+  })
+}
+
+// 角色详情
+export function getInfo(data) {
+  return request({
+    url: USER_URL + '/role/info',
+    method: 'post',
+    data
+  })
+}
+
+// 新增角色
+export function addRole(data) {
+  return request({
+    url: USER_URL + '/role/add',
+    method: 'post',
+    data
+  })
+}
+
+// 修改角色
+export function updRole(data) {
+  return request({
+    url: USER_URL + '/role/upd',
+    method: 'post',
+    data
+  })
+}
+
+// 修改角色状态
+export function updStatus(data) {
+  return request({
+    url: USER_URL + '/role/upd/status',
+    method: 'post',
+    data
+  })
+}
+
+// 删除角色
+export function delRole(data) {
+  return request({
+    url: USER_URL + '/role/del',
+    method: 'post',
+    data
+  })
+}
+
 // 查询角色列表
 export function listRole(query) {
   return request({
@@ -14,15 +80,6 @@ export function getRole(roleId) {
   return request({
     url: '/system/role/' + roleId,
     method: 'get'
-  })
-}
-
-// 新增角色
-export function addRole(data) {
-  return request({
-    url: '/system/role',
-    method: 'post',
-    data: data
   })
 }
 
@@ -54,14 +111,6 @@ export function changeRoleStatus(roleId, status) {
     url: '/system/role/changeStatus',
     method: 'put',
     data: data
-  })
-}
-
-// 删除角色
-export function delRole(roleId) {
-  return request({
-    url: '/system/role/' + roleId,
-    method: 'delete'
   })
 }
 

@@ -64,9 +64,9 @@ const user = {
           // const user = res.user
           const avatar = require("@/assets/images/profile.jpg")
           // const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
-          if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', res.roleNameList)
-            commit('SET_PERMISSIONS', res.permissions)
+          if (res.data.roleNameList && res.data.roleNameList.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', res.data.roleNameList)
+            commit('SET_PERMISSIONS', res.data.permissions)
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
