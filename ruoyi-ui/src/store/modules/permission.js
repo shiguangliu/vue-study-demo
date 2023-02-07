@@ -135,35 +135,4 @@ export const loadView = (view) => {
   }
 }
 
-const moyiluyou = [
-  {
-    alwaysShow: true,
-    children : [
-      {
-        component: "system/user/index",
-        // hidden: false,
-        meta: {
-          icon: "user",
-          // link: null,
-          // noCache: false,
-          title: "用户管理"
-        },
-        // name: "User",
-        path: "user"
-      }
-    ],
-    // component: Layout,
-    // hidden: false,
-    meta: {
-      icon: "system",
-      // link: null,
-      // noCache: false,
-      title: "系统管理"
-    },
-    // name: 'System',
-    path: '/system',
-    // redirect: "noRedirect"
-  }
-]
-
 export default permission
