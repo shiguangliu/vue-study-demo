@@ -120,6 +120,15 @@ export function batchCancel(data) {
   })
 }
 
+// 查询权限树
+export function authList(data) {
+  return request({
+    url: USER_URL + '/auth/menu/auth/list',
+    method: 'post',
+    data
+  })
+}
+
 // 查询角色列表
 export function listRole(query) {
   return request({
