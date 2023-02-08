@@ -69,7 +69,7 @@
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
-          @click="handleDelete"
+          @click="handleBatchDelete"
           v-hasPermi="['system:role:remove']"
         >删除</el-button>
       </el-col>
@@ -231,7 +231,7 @@
 </template>
 
 <script>
-import { list,getInfo,updRole,updStatus,listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus, deptTreeSelect } from "@/api/system/role";
+import { list,getInfo,updRole,updStatus,batchDelRole,listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus, deptTreeSelect } from "@/api/system/role";
 import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
 
 export default {
@@ -302,13 +302,6 @@ export default {
         roleCode: undefined,
         status: undefined
       },
-      // queryParams: {
-      //   pageNum: 1,
-      //   pageSize: 10,
-      //   roleName: undefined,
-      //   roleKey: undefined,
-      //   status: undefined
-      // },
       // 表单参数
       form: {},
       defaultProps: {
@@ -391,9 +384,6 @@ export default {
           id: row.id,
           status: row.status
         }
-        // updStatus(params).then(res => {
-        //   this.$modal.msgSuccess(text + "成功");
-        // });
         return  updStatus(params);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
@@ -413,13 +403,6 @@ export default {
     },
     // 表单重置
     reset() {
-      // if (this.$refs.menu != undefined) {
-      //   this.$refs.menu.setCheckedKeys([]);
-      // }
-      // this.menuExpand = false,
-      // this.menuNodeAll = false,
-      // this.deptExpand = true,
-      // this.deptNodeAll = false,
       this.form = {
         id: undefined,
         name: undefined,
@@ -529,7 +512,6 @@ export default {
     },
     /** 分配用户操作 */
     handleAuthUser: function(row) {
-      console.log(row)
       const roleId = row.id;
       this.$router.push("/system/role-auth/user/" + roleId);
     },
@@ -567,9 +549,24 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const roleIds = row.id || this.ids;
-      this.$modal.confirm('是否确认删除角色编号为"' + roleIds + '"的数据项？').then(function() {
-        return delRole(roleIds);
+      console.log(row)
+      const data = {
+        id: row.id
+      };
+      this.$modal.confirm('是否确认删除角色编号为"' + row.id + '"的数据项？').then(function() {
+        return delRole(data);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {});
+    },
+    // 批量删除操作
+    handleBatchDelete(){
+      const data = {
+        roleIds: this.ids
+      };
+      this.$modal.confirm('是否确认删除角色编号为"' + this.ids + '"的数据项？').then(function() {
+        return batchDelRole(data);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

@@ -10,9 +10,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="手机号码" prop="phonenumber">
+      <el-form-item label="手机号码" prop="phone">
         <el-input
-          v-model="queryParams.phonenumber"
+          v-model="queryParams.phone"
           placeholder="请输入手机号码"
           clearable
           @keyup.enter.native="handleQuery"
@@ -26,18 +26,13 @@
     <el-row>
       <el-table @row-click="clickRow" ref="table" :data="userList" @selection-change="handleSelectionChange" height="260px">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-        <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
+        <el-table-column label="用户名称" prop="username" :show-overflow-tooltip="true" />
+        <el-table-column label="用户昵称" prop="nickname" :show-overflow-tooltip="true" />
         <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-        <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
+        <el-table-column label="手机" prop="phone" :show-overflow-tooltip="true" />
         <el-table-column label="状态" align="center" prop="status">
           <template slot-scope="scope">
-            <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.createTime) }}</span>
+            <el-tag :type="scope.row.status === 1 ? '' : 'danger'">{{ scope.row.status === 1 ? '正常' : '停用' }}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -57,9 +52,9 @@
 </template>
 
 <script>
-import { unallocatedUserList, authUserSelectAll } from "@/api/system/role";
+import { unbindUserList,bind } from "@/api/system/role";
 export default {
-  dicts: ['sys_normal_disable'],
+  // dicts: ['sys_normal_disable'],
   props: {
     // 角色编号
     roleId: {
@@ -82,7 +77,7 @@ export default {
         pageSize: 10,
         roleId: undefined,
         userName: undefined,
-        phonenumber: undefined
+        phone: undefined
       }
     };
   },
@@ -98,13 +93,13 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.userIds = selection.map(item => item.userId);
+      this.userIds = selection.map(item => item.id);
     },
     // 查询表数据
     getList() {
-      unallocatedUserList(this.queryParams).then(res => {
-        this.userList = res.rows;
-        this.total = res.total;
+      unbindUserList(this.queryParams).then(res => {
+        this.userList = res.data.items;
+        this.total = res.data.total;
       });
     },
     /** 搜索按钮操作 */
@@ -120,13 +115,17 @@ export default {
     /** 选择授权用户操作 */
     handleSelectUser() {
       const roleId = this.queryParams.roleId;
-      const userIds = this.userIds.join(",");
+      const userIds = this.userIds;
       if (userIds == "") {
         this.$modal.msgError("请选择要分配的用户");
         return;
       }
-      authUserSelectAll({ roleId: roleId, userIds: userIds }).then(res => {
-        this.$modal.msgSuccess(res.msg);
+      const params = {
+        roleId: roleId,
+        userIds: userIds
+      };
+      bind(params).then(res => {
+        this.$modal.msgSuccess(res.message);
         if (res.code === 200) {
           this.visible = false;
           this.$emit("ok");

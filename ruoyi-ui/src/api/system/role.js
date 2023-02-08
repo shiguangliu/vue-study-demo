@@ -66,6 +66,60 @@ export function delRole(data) {
   })
 }
 
+// 批量删除角色
+export function batchDelRole(data) {
+  return request({
+    url: USER_URL + '/role/batch/del',
+    method: 'post',
+    data
+  })
+}
+
+// 根据权限id查询当前权限下的所有用户
+export function userList(data) {
+  return request({
+    url: USER_URL + '/user/role/user/list',
+    method: 'post',
+    data
+  })
+}
+
+// 根据权限id查询未绑定的用户
+export function unbindUserList(data) {
+  return request({
+    url: USER_URL + '/user/role/user/unbind/list',
+    method: 'post',
+    data
+  })
+}
+
+// 角色绑定用户
+export function bind(data) {
+  return request({
+    url: USER_URL + '/user/role/user/bind',
+    method: 'post',
+    data
+  })
+}
+
+// 取消用户角色
+export function cancel(data) {
+  return request({
+    url: USER_URL + '/user/role/cancel',
+    method: 'post',
+    data
+  })
+}
+
+// 批量取消用户角色
+export function batchCancel(data) {
+  return request({
+    url: USER_URL + '/user/role/batch/cancel',
+    method: 'post',
+    data
+  })
+}
+
 // 查询角色列表
 export function listRole(query) {
   return request({
