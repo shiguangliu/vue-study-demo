@@ -28,3 +28,4 @@ npm run dev(本地)
 ## https://www.bilibili.com/video/BV1eL411P7G6/?spm_id_from=333.337.search-card.all.click&vd_source=faac0c2e52329f987851035277338e12
 ## https://www.bilibili.com/video/BV1zm4y1A7yQ/?p=2&spm_id_from=pageDriver&vd_source=faac0c2e52329f987851035277338e12
 ## 网上框架地址：https://github.com/PanJiaChen/vue-element-admin
+## https://vue.ruoyi.vip/index
