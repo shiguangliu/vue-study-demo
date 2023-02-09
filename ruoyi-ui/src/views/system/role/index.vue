@@ -196,9 +196,9 @@
           <el-input v-model="form.roleCode" :disabled="true" />
         </el-form-item>
         <el-form-item label="数据权限">
-          <el-checkbox v-model="deptExpand" @change="handleCheckedTreeExpand($event, 'dept')">展开/折叠</el-checkbox>
-          <el-checkbox v-model="deptNodeAll" @change="handleCheckedTreeNodeAll($event, 'dept')">全选/全不选</el-checkbox>
-          <el-checkbox v-model="deptCheckStrictly" @change="handleCheckedTreeConnect($event, 'dept')">父子联动</el-checkbox>
+          <el-checkbox v-model="deptExpand" @change="handleCheckedTreeExpand($event)">展开/折叠</el-checkbox>
+          <el-checkbox v-model="deptNodeAll" @change="handleCheckedTreeNodeAll($event)">全选/全不选</el-checkbox>
+          <el-checkbox v-model="deptCheckStrictly" @change="handleCheckedTreeConnect($event)">父子联动</el-checkbox>
           <el-tree
             class="tree-border"
             :data="deptOptions"
@@ -206,7 +206,7 @@
             default-expand-all
             ref="dept"
             node-key="id"
-            :check-strictly="!form.deptCheckStrictly"
+            :check-strictly="!deptCheckStrictly"
             empty-text="加载中，请稍候"
             :props="defaultProps"
           ></el-tree>
@@ -221,8 +221,7 @@
 </template>
 
 <script>
-import { list,getInfo,updRole,updStatus,batchDelRole,authList,listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus, deptTreeSelect } from "@/api/system/role";
-import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
+import { list,getInfo,updRole,updStatus,batchDelRole,authList,buttonList, delRole, addRole, dataScope} from "@/api/system/role";
 
 export default {
   name: "Role",
@@ -233,7 +232,6 @@ export default {
         { value: 1, label: "正常" },
         { value: 2, label: "停用" }
       ],
-      deptCheckStrictly: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -257,10 +255,11 @@ export default {
       menuExpand: false,
       menuNodeAll: false,
       deptExpand: true,
+      deptCheckStrictly: true,
       deptNodeAll: false,
       // 菜单列表
       menuOptions: [],
-      // 部门列表
+      // 权限树列表
       deptOptions: [],
       // 查询参数
       queryParams: {
@@ -298,52 +297,7 @@ export default {
         this.roleList = res.data.items;
         this.total = res.data.total;
         this.loading = false;
-      });
-      // listRole(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-      //     this.roleList = response.rows;
-      //     this.total = response.total;
-      //     this.loading = false;
-      //   }
-      // );
-    },
-    /** 查询菜单树结构 */
-    // getMenuTreeselect() {
-    //   menuTreeselect().then(response => {
-    //     this.menuOptions = response.data;
-    //   });
-    // },
-    // 所有菜单节点数据
-    // getMenuAllCheckedKeys() {
-    //   // 目前被选中的菜单节点
-    //   let checkedKeys = this.$refs.menu.getCheckedKeys();
-    //   // 半选中的菜单节点
-    //   let halfCheckedKeys = this.$refs.menu.getHalfCheckedKeys();
-    //   checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
-    //   return checkedKeys;
-    // },
-    // 所有部门节点数据
-    // getDeptAllCheckedKeys() {
-    //   // 目前被选中的部门节点
-    //   let checkedKeys = this.$refs.dept.getCheckedKeys();
-    //   // 半选中的部门节点
-    //   let halfCheckedKeys = this.$refs.dept.getHalfCheckedKeys();
-    //   checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
-    //   return checkedKeys;
-    // },
-    /** 根据角色ID查询菜单树结构 */
-    // getRoleMenuTreeselect(roleId) {
-    //   return roleMenuTreeselect(roleId).then(response => {
-    //     this.menuOptions = response.menus;
-    //     return response;
-    //   });
-    // },
-    /** 根据角色ID查询部门树结构 */
-    getDeptTree(roleId) {
-      return authList().then(res => {
-        console.log(res)
-        this.deptOptions = res.data.authMenuParentList;
-        return res;
-      });
+      })
     },
     // 角色状态修改
     handleStatusChange(row) {
@@ -410,39 +364,29 @@ export default {
       }
     },
     // 树权限（展开/折叠）
-    handleCheckedTreeExpand(value, type) {
-      if (type == 'menu') {
-        let treeList = this.menuOptions;
-        for (let i = 0; i < treeList.length; i++) {
-          this.$refs.menu.store.nodesMap[treeList[i].id].expanded = value;
-        }
-      } else if (type == 'dept') {
-        let treeList = this.deptOptions;
+    handleCheckedTreeExpand(value) {
+      let treeList = this.deptOptions;
         for (let i = 0; i < treeList.length; i++) {
           this.$refs.dept.store.nodesMap[treeList[i].id].expanded = value;
         }
-      }
     },
     // 树权限（全选/全不选）
-    handleCheckedTreeNodeAll(value, type) {
-      if (type == 'menu') {
-        this.$refs.menu.setCheckedNodes(value ? this.menuOptions: []);
-      } else if (type == 'dept') {
-        this.$refs.dept.setCheckedNodes(value ? this.deptOptions: []);
-      }
+    handleCheckedTreeNodeAll(value) {
+      this.$refs.dept.setCheckedNodes(value ? this.deptOptions: []);
+      console.log(this.$refs.dept.getCheckedNodes())
+      console.log(this.$refs.dept.getCheckedKeys())
+      // let checkedKeys = this.$refs.dept.getCheckedKeys();
+    //   // 半选中的部门节点
+    //   let halfCheckedKeys = this.$refs.dept.getHalfCheckedKeys();
+    //   checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
     },
     // 树权限（父子联动）
-    handleCheckedTreeConnect(value, type) {
-      if (type == 'menu') {
-        this.form.menuCheckStrictly = value ? true: false;
-      } else if (type == 'dept') {
-        this.form.deptCheckStrictly = value ? true: false;
-      }
+    handleCheckedTreeConnect(value) {
+      this.deptCheckStrictly = value ? true: false
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      // this.getMenuTreeselect();
       this.open = true;
       this.title = "添加角色";
     },
@@ -458,28 +402,28 @@ export default {
         this.title = "修改角色";
       });
     },
-    /** 选择角色权限范围触发 */
-    // dataScopeSelectChange(value) {
-    //   if(value !== '2') {
-    //     this.$refs.dept.setCheckedKeys([]);
-    //   }
-    // },
     /** 分配数据权限操作 */
     handleDataScope(row) {
       this.reset();
-      // const deptTreeSelect = this.getDeptTree(row.id);
-      const deptTreeSelect = this.getDeptTree(row.id);
+      authList().then(res => {
+        this.deptOptions = res.data.depts
+      });
       const params = {
         id: row.id
       }
       getInfo(params).then(res => {
         this.form = res.data;
         this.openDataScope = true;
-        // this.$nextTick(() => {
-        //   deptTreeSelect.then(res => {
-        //     this.$refs.dept.setCheckedKeys(res.checkedKeys);
-        //   });
-        // });
+        // 获取当前角色已分配的权限
+        const data = {
+          roleId: row.id
+        }
+        buttonList(data).then(response => {
+          let checkedKeys = response.data.buttonIdList
+          this.$nextTick(() => {
+            this.$refs.dept.setCheckedKeys(checkedKeys);
+        });
+        })
         this.title = "分配数据权限";
       });
     },
@@ -511,6 +455,8 @@ export default {
     },
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
+      console.log(this.$refs.dept.getCheckedNodes())
+      return
       if (this.form.roleId != undefined) {
         this.form.deptIds = this.getDeptAllCheckedKeys();
         dataScope(this.form).then(response => {

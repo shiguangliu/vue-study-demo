@@ -129,6 +129,15 @@ export function authList(data) {
   })
 }
 
+// 根据角色id查询按钮信息
+export function buttonList(data) {
+  return request({
+    url: USER_URL + '/user/role/button/list',
+    method: 'post',
+    data
+  })
+}
+
 // 查询角色列表
 export function listRole(query) {
   return request({
