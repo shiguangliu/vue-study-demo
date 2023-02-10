@@ -406,7 +406,7 @@ export default {
     handleDataScope(row) {
       this.reset();
       authList().then(res => {
-        this.deptOptions = res.data.depts
+        this.deptOptions = res.data.items
       });
       const params = {
         id: row.id
@@ -456,6 +456,9 @@ export default {
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
       console.log(this.$refs.dept.getCheckedNodes())
+      console.log(this.$refs.dept.getHalfCheckedKeys())
+      console.log(this.$refs.dept.getCheckedKeys())
+      console.log(this.$refs.dept.getCheckedKeys().concat(this.$refs.dept.getHalfCheckedKeys()))
       return
       if (this.form.roleId != undefined) {
         this.form.deptIds = this.getDeptAllCheckedKeys();
