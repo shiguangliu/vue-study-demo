@@ -123,7 +123,7 @@ export function batchCancel(data) {
 // 查询权限树
 export function authList(data) {
   return request({
-    url: USER_URL + '/auth/menu/auth/list',
+    url: USER_URL + '/sys_menu/auth/list',
     method: 'post',
     data
   })
