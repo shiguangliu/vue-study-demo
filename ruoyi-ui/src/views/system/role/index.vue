@@ -161,7 +161,7 @@
         <el-form-item label="角色名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入角色名称" />
         </el-form-item>
-        <el-form-item prop="roleCode">
+        <!-- <el-form-item prop="roleCode">
           <span slot="label">
             <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasRole('admin')`)" placement="top">
               <i class="el-icon-question"></i>
@@ -169,6 +169,28 @@
             权限字符
           </span>
           <el-input v-model="form.roleCode" placeholder="请输入权限字符" />
+        </el-form-item> -->
+        <el-form-item prop="roleCode">
+          <span slot="label">
+            <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasRole('admin')`)" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+            权限字符
+          </span>
+          <el-select
+            v-model="form.roleCode"
+            placeholder="请选择权限字符"
+            clearable
+            :disabled = "this.form.id !== undefined"
+            style="width: 240px"
+          >
+            <el-option
+              v-for="dict in this.roleCodeList"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -221,13 +243,19 @@
 </template>
 
 <script>
-import { list,getInfo,updRole,updStatus,batchDelRole,authList,buttonList, delRole, addRole, dataScope} from "@/api/system/role";
+import { list,getInfo,updRole,updStatus,batchDelRole,authList,resourceList, delRole, addRole, dataScope, roleBindResource } from "@/api/system/role";
 
 export default {
   name: "Role",
   dicts: [],
   data() {
     return {
+      // 角色权限字符
+      roleCodeList: [
+        { value: "USER", label: "USER" },
+        { value: "TEST", label: "TEST" }
+      ],
+      // 角色状态列表
       roleStatusList: [
         { value: 1, label: "正常" },
         { value: 2, label: "停用" }
@@ -373,12 +401,6 @@ export default {
     // 树权限（全选/全不选）
     handleCheckedTreeNodeAll(value) {
       this.$refs.dept.setCheckedNodes(value ? this.deptOptions: []);
-      console.log(this.$refs.dept.getCheckedNodes())
-      console.log(this.$refs.dept.getCheckedKeys())
-      // let checkedKeys = this.$refs.dept.getCheckedKeys();
-    //   // 半选中的部门节点
-    //   let halfCheckedKeys = this.$refs.dept.getHalfCheckedKeys();
-    //   checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
     },
     // 树权限（父子联动）
     handleCheckedTreeConnect(value) {
@@ -405,6 +427,7 @@ export default {
     /** 分配数据权限操作 */
     handleDataScope(row) {
       this.reset();
+      this.form.id = row.id;
       authList().then(res => {
         this.deptOptions = res.data.items
       });
@@ -418,8 +441,8 @@ export default {
         const data = {
           roleId: row.id
         }
-        buttonList(data).then(response => {
-          let checkedKeys = response.data.buttonIdList
+        resourceList(data).then(response => {
+          let checkedKeys = response.data.resourceIds
           this.$nextTick(() => {
             this.$refs.dept.setCheckedKeys(checkedKeys);
         });
@@ -444,7 +467,6 @@ export default {
             });
           } else {
             addRole(this.form).then(res => {
-              console.log(res)
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -455,23 +477,19 @@ export default {
     },
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
-      console.log(this.$refs.dept.getCheckedNodes())
-      console.log(this.$refs.dept.getHalfCheckedKeys())
-      console.log(this.$refs.dept.getCheckedKeys())
-      console.log(this.$refs.dept.getCheckedKeys().concat(this.$refs.dept.getHalfCheckedKeys()))
-      return
-      if (this.form.roleId != undefined) {
-        this.form.deptIds = this.getDeptAllCheckedKeys();
-        dataScope(this.form).then(response => {
-          this.$modal.msgSuccess("修改成功");
-          this.openDataScope = false;
-          this.getList();
-        });
+      const data = {
+        roleId: this.form.id,
+        ids: this.$refs.dept.getCheckedKeys().concat(this.$refs.dept.getHalfCheckedKeys())
       }
+      console.log(this.$refs.dept.getCheckedKeys().concat(this.$refs.dept.getHalfCheckedKeys()))
+      roleBindResource(data).then(res => {
+        this.$modal.msgSuccess("修改成功");
+        this.openDataScope = false;
+        this.getList();
+      });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      console.log(row)
       const data = {
         id: row.id
       };
