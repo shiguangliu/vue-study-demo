@@ -1,11 +1,14 @@
 import request from '@/utils/request'
 
+// 登录账号相关服务API路由
+const USER_URL = process.env.VUE_APP_BASE_API
+
 // 查询菜单列表
-export function listMenu(query) {
+export function listMenu(data) {
   return request({
-    url: '/system/menu/list',
-    method: 'get',
-    params: query
+    url: USER_URL + '/sys_menu/list',
+    method: 'post',
+    data
   })
 }
 

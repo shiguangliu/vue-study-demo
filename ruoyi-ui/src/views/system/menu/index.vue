@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-      <el-form-item label="菜单名称" prop="menuName">
+      <el-form-item label="菜单名称" prop="title">
         <el-input
-          v-model="queryParams.menuName"
+          v-model="queryParams.title"
           placeholder="请输入菜单名称"
           clearable
           @keyup.enter.native="handleQuery"
@@ -12,7 +12,7 @@
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="菜单状态" clearable>
           <el-option
-            v-for="dict in dict.type.sys_normal_disable"
+            v-for="dict in statusList"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -52,26 +52,25 @@
       v-if="refreshTable"
       v-loading="loading"
       :data="menuList"
-      row-key="menuId"
+      row-key="id"
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
+      <el-table-column prop="title" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center" width="100">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="orderNum" label="排序" width="60"></el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="status" label="状态" width="80">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          <el-tag :type="scope.row.status === 1 ? '' : 'danger'">{{ scope.row.status === 1 ? '正常' : '停用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime">
-        <template slot-scope="scope">
+        <template slot-scope="scope"> 
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
@@ -149,8 +148,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
+            <el-form-item label="菜单名称" prop="title">
+              <el-input v-model="form.title" placeholder="请输入菜单名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -240,7 +239,7 @@
               </span>
               <el-radio-group v-model="form.visible">
                 <el-radio
-                  v-for="dict in dict.type.sys_show_hide"
+                  v-for="dict in statusList"
                   :key="dict.value"
                   :label="dict.value"
                 >{{dict.label}}</el-radio>
@@ -257,7 +256,7 @@
               </span>
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in dict.type.sys_normal_disable"
+                  v-for="dict in statusList"
                   :key="dict.value"
                   :label="dict.value"
                 >{{dict.label}}</el-radio>
@@ -282,10 +281,22 @@ import IconSelect from "@/components/IconSelect";
 
 export default {
   name: "Menu",
-  dicts: ['sys_show_hide', 'sys_normal_disable'],
+  dicts: [],
+  // dicts: ['sys_show_hide', 'sys_normal_disable'],
   components: { Treeselect, IconSelect },
   data() {
     return {
+      // 状态
+      statusList: [
+        {
+          value: 1,
+          label: "正常"
+        },
+        {
+          value: 2,
+          label: "停用"
+        }
+      ],
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -304,14 +315,14 @@ export default {
       refreshTable: true,
       // 查询参数
       queryParams: {
-        menuName: undefined,
+        title: undefined,
         visible: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        menuName: [
+        title: [
           { required: true, message: "菜单名称不能为空", trigger: "blur" }
         ],
         orderNum: [
@@ -334,8 +345,8 @@ export default {
     /** 查询菜单列表 */
     getList() {
       this.loading = true;
-      listMenu(this.queryParams).then(response => {
-        this.menuList = this.handleTree(response.data, "menuId");
+      listMenu(this.queryParams).then(res => {
+        this.menuList = this.handleTree(res.data.items, "id");
         this.loading = false;
       });
     },
