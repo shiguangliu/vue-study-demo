@@ -117,15 +117,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="菜单类型" prop="menuType">
-              <el-radio-group v-model="form.menuType">
-                <el-radio label="M">目录</el-radio>
-                <el-radio label="C">菜单</el-radio>
-                <el-radio label="F">按钮</el-radio>
+            <el-form-item label="菜单类型" prop="type">
+              <el-radio-group v-model="form.type">
+                <el-radio
+                  v-for="dict in menuTypeList"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="form.menuType != 'F'">
+          <el-col :span="24" v-if="form.type != 3">
             <el-form-item label="菜单图标" prop="icon">
               <el-popover
                 placement="bottom-start"
@@ -152,12 +154,12 @@
               <el-input v-model="form.title" placeholder="请输入菜单名称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="显示排序" prop="orderNum">
               <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
             </el-form-item>
-          </el-col>
-          <el-col :span="12" v-if="form.menuType != 'F'">
+          </el-col> -->
+          <!-- <el-col :span="12" v-if="form.menuType != 'F'">
             <el-form-item prop="isFrame">
               <span slot="label">
                 <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
@@ -170,8 +172,8 @@
                 <el-radio label="1">否</el-radio>
               </el-radio-group>
             </el-form-item>
-          </el-col>
-          <el-col :span="12" v-if="form.menuType != 'F'">
+          </el-col> -->
+          <el-col :span="12" v-if="form.type != 3">
             <el-form-item prop="path">
               <span slot="label">
                 <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
@@ -182,7 +184,7 @@
               <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.menuType == 'C'">
+          <el-col :span="12" v-if="form.type == 2">
             <el-form-item prop="component">
               <span slot="label">
                 <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
@@ -193,7 +195,7 @@
               <el-input v-model="form.component" placeholder="请输入组件路径" />
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.menuType != 'M'">
+          <el-col :span="12" v-if="form.type != 1">
             <el-form-item prop="perms">
               <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
               <span slot="label">
@@ -204,7 +206,7 @@
               </span>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.menuType == 'C'">
+          <el-col :span="12" v-if="form.type == 2">
             <el-form-item prop="query">
               <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
               <span slot="label">
@@ -215,7 +217,7 @@
               </span>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.menuType == 'C'">
+          <!-- <el-col :span="12" v-if="form.menuType == 'C'">
             <el-form-item prop="isCache">
               <span slot="label">
                 <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
@@ -228,8 +230,8 @@
                 <el-radio label="1">不缓存</el-radio>
               </el-radio-group>
             </el-form-item>
-          </el-col>
-          <el-col :span="12" v-if="form.menuType != 'F'">
+          </el-col> -->
+          <!-- <el-col :span="12" v-if="form.menuType != 'F'">
             <el-form-item prop="visible">
               <span slot="label">
                 <el-tooltip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" placement="top">
@@ -245,8 +247,8 @@
                 >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
-          </el-col>
-          <el-col :span="12" v-if="form.menuType != 'F'">
+          </el-col> -->
+          <el-col :span="12" v-if="form.type != 3">
             <el-form-item prop="status">
               <span slot="label">
                 <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
@@ -286,6 +288,21 @@ export default {
   components: { Treeselect, IconSelect },
   data() {
     return {
+      // 菜单类型
+      menuTypeList: [
+        {
+          value: 1,
+          label: "目录"
+        },
+        {
+          value: 2,
+          label: "菜单"
+        },
+        {
+          value: 3,
+          label: "按钮"
+        }
+      ],
       // 状态
       statusList: [
         {
@@ -325,9 +342,9 @@ export default {
         title: [
           { required: true, message: "菜单名称不能为空", trigger: "blur" }
         ],
-        orderNum: [
-          { required: true, message: "菜单顺序不能为空", trigger: "blur" }
-        ],
+        // orderNum: [
+        //   { required: true, message: "菜单顺序不能为空", trigger: "blur" }
+        // ],
         path: [
           { required: true, message: "路由地址不能为空", trigger: "blur" }
         ]
@@ -356,17 +373,17 @@ export default {
         delete node.children;
       }
       return {
-        id: node.menuId,
-        label: node.menuName,
+        id: node.id,
+        label: node.title,
         children: node.children
       };
     },
     /** 查询菜单下拉树结构 */
     getTreeselect() {
-      listMenu().then(response => {
+      listMenu({}).then(res => {
         this.menuOptions = [];
-        const menu = { menuId: 0, menuName: '主类目', children: [] };
-        menu.children = this.handleTree(response.data, "menuId");
+        const menu = { id: 0, title: '主类目', children: [] };
+        menu.children = this.handleTree(res.data.items, "id");
         this.menuOptions.push(menu);
       });
     },
@@ -378,16 +395,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        menuId: undefined,
+        id: undefined,
         parentId: 0,
-        menuName: undefined,
+        title: undefined,
         icon: undefined,
-        menuType: "M",
-        orderNum: undefined,
-        isFrame: "1",
-        isCache: "0",
-        visible: "0",
-        status: "0"
+        type: 1,
+        status: 1
       };
       this.resetForm("form");
     },
@@ -441,6 +454,8 @@ export default {
               this.getList();
             });
           } else {
+            console.log(this.form);
+            return
             addMenu(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
