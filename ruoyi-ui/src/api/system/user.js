@@ -1,14 +1,26 @@
 import request from '@/utils/request'
 import { parseStrEmpty } from "@/utils/ruoyi";
 
+// 后台服务API路由
+const USER_URL = process.env.VUE_APP_BASE_API
+
 // 查询用户列表
-export function listUser(query) {
+export function listUser(data) {
   return request({
-    url: '/system/user/list',
-    method: 'get',
-    params: query
+    url: USER_URL + '/user/list',
+    method: 'post',
+    data
   })
 }
+
+// // 查询用户列表
+// export function listUser(query) {
+//   return request({
+//     url: '/system/user/list',
+//     method: 'get',
+//     params: query
+//   })
+// }
 
 // 查询用户详细
 export function getUser(userId) {
