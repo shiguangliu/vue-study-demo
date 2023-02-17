@@ -476,8 +476,13 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      this.queryParams.startTime = this.dateRange[0] + " 00:00:00";
-      this.queryParams.endTime = this.dateRange[1] + " 23:59:59";
+      if (this.dateRange.length > 0) {
+        this.queryParams.startTime = this.dateRange[0] + " 00:00:00";
+        this.queryParams.endTime = this.dateRange[1] + " 23:59:59";
+      } else {
+        this.queryParams.startTime = undefined;
+        this.queryParams.endTime = undefined;
+      }
       listUser(this.queryParams).then(res => {
           this.userList = res.data.items;
           this.total = res.data.total;
