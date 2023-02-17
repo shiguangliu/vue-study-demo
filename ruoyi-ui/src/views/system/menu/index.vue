@@ -64,6 +64,7 @@
       </el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="backPath" label="接口路径" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="status" label="状态" width="80">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status === 1 ? '' : 'danger'">{{ scope.row.status === 1 ? '正常' : '停用' }}</el-tag>
@@ -195,7 +196,18 @@
               <el-input v-model="form.component" placeholder="请输入组件路径" />
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.type != 1">
+          <el-col :span="12" v-if="form.type == 3">
+            <el-form-item prop="backPath">
+              <span slot="label">
+                <el-tooltip content="访问的后台接口路径，如：`/user/list`" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                接口路径
+              </span>
+              <el-input v-model="form.backPath" placeholder="请输入接口路径" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.type == 3">
             <el-form-item prop="perms">
               <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
               <span slot="label">
@@ -206,7 +218,7 @@
               </span>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.type == 2">
+          <!-- <el-col :span="12" v-if="form.type == 2">
             <el-form-item prop="query">
               <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
               <span slot="label">
@@ -216,7 +228,7 @@
                 路由参数
               </span>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <!-- <el-col :span="12" v-if="form.menuType == 'C'">
             <el-form-item prop="isCache">
               <span slot="label">
@@ -248,7 +260,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col> -->
-          <el-col :span="12" v-if="form.type != 3">
+          <el-col :span="12" >
             <el-form-item prop="status">
               <span slot="label">
                 <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
@@ -276,7 +288,7 @@
 </template>
 
 <script>
-import { listMenu, getMenu, delMenu, addMenu, updateMenu } from "@/api/system/menu";
+import { listMenu, getMenu, delMenu, addMenu, updateMenu,updMenu } from "@/api/system/menu";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
@@ -342,11 +354,17 @@ export default {
         title: [
           { required: true, message: "菜单名称不能为空", trigger: "blur" }
         ],
-        // orderNum: [
-        //   { required: true, message: "菜单顺序不能为空", trigger: "blur" }
-        // ],
+        component: [
+          { required: true, message: "组件路径不能为空", trigger: "blur" }
+        ],
+        perms: [
+          { required: true, message: "权限字符不能为空", trigger: "blur" }
+        ],
         path: [
           { required: true, message: "路由地址不能为空", trigger: "blur" }
+        ],
+        backPath: [
+          { required: true, message: "接口路径不能为空", trigger: "blur" }
         ]
       }
     };
@@ -417,8 +435,8 @@ export default {
     handleAdd(row) {
       this.reset();
       this.getTreeselect();
-      if (row != null && row.menuId) {
-        this.form.parentId = row.menuId;
+      if (row != null && row.id) {
+        this.form.parentId = row.id;
       } else {
         this.form.parentId = 0;
       }
@@ -437,8 +455,11 @@ export default {
     handleUpdate(row) {
       this.reset();
       this.getTreeselect();
-      getMenu(row.menuId).then(response => {
-        this.form = response.data;
+      const params = {
+        id: row.id
+      };
+      getMenu(params).then(res => {
+        this.form = res.data;
         this.open = true;
         this.title = "修改菜单";
       });
@@ -447,16 +468,14 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.menuId != undefined) {
-            updateMenu(this.form).then(response => {
+          if (this.form.id != undefined) {
+            updMenu(this.form).then(res => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            console.log(this.form);
-            return
-            addMenu(this.form).then(response => {
+            addMenu(this.form).then(res => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -467,8 +486,11 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$modal.confirm('是否确认删除名称为"' + row.menuName + '"的数据项？').then(function() {
-        return delMenu(row.menuId);
+      this.$modal.confirm('是否确认删除名称为"' + row.title + '"的数据项？').then(function() {
+        const params = {
+          id: row.id
+        };
+        return delMenu(params);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
