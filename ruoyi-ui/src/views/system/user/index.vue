@@ -476,8 +476,8 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      this.queryParams.startTime = this.dateRange[0];
-      this.queryParams.endTime = this.dateRange[1];
+      this.queryParams.startTime = this.dateRange[0] + " 00:00:00";
+      this.queryParams.endTime = this.dateRange[1] + " 23:59:59";
       listUser(this.queryParams).then(res => {
           this.userList = res.data.items;
           this.total = res.data.total;
