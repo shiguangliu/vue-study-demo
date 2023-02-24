@@ -84,6 +84,15 @@ export function userBindRole(data) {
   })
 }
 
+// 更新当前登录用户信息
+export function updateInfo(data) {
+  return request({
+    url: USER_URL + '/user/update/info',
+    method: 'post',
+    data
+  })
+}
+
 // // 查询用户列表
 // export function listUser(query) {
 //   return request({
