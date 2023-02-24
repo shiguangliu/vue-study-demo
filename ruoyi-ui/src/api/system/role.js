@@ -4,7 +4,7 @@ import request from '@/utils/request'
 const USER_URL = process.env.VUE_APP_BASE_API
 
 // 查询所有权限
-export function all(data) {
+export function roleAll(data) {
   return request({
     url: USER_URL + '/role/all',
     method: 'post',

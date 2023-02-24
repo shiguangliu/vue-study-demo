@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { parseStrEmpty } from "@/utils/ruoyi";
 
 // 后台服务API路由
 const USER_URL = process.env.VUE_APP_BASE_API
@@ -8,6 +7,78 @@ const USER_URL = process.env.VUE_APP_BASE_API
 export function listUser(data) {
   return request({
     url: USER_URL + '/user/list',
+    method: 'post',
+    data
+  })
+}
+
+// 用户详情
+export function getUser(data) {
+  return request({
+    url: USER_URL + '/user/get',
+    method: 'post',
+    data
+  })
+}
+
+// 新增用户
+export function addUser(data) {
+  return request({
+    url: USER_URL + '/user/add',
+    method: 'post',
+    data
+  })
+}
+
+// 新增用户
+export function updUser(data) {
+  return request({
+    url: USER_URL + '/user/update',
+    method: 'post',
+    data
+  })
+}
+
+// 修改用户状态
+export function updUserStatus(data) {
+  return request({
+    url: USER_URL + '/user/update/status',
+    method: 'post',
+    data
+  })
+}
+
+// 重置密码
+export function resetUserPwd(data) {
+  return request({
+    url: USER_URL + '/user/reset/password',
+    method: 'post',
+    data
+  })
+}
+
+// 删除用户
+export function delUser(data) {
+  return request({
+    url: USER_URL + '/user/delete',
+    method: 'post',
+    data
+  })
+}
+
+// 批量删除用户
+export function batchDelUser(data) {
+  return request({
+    url: USER_URL + '/user/batch/delete',
+    method: 'post',
+    data
+  })
+}
+
+// 用户绑定角色
+export function userBindRole(data) {
+  return request({
+    url: USER_URL + '/user/role/bind/roles',
     method: 'post',
     data
   })
@@ -22,61 +93,11 @@ export function listUser(data) {
 //   })
 // }
 
-// 查询用户详细
-export function getUser(userId) {
-  return request({
-    url: '/system/user/' + parseStrEmpty(userId),
-    method: 'get'
-  })
-}
-
-// 新增用户
-export function addUser(data) {
-  return request({
-    url: '/system/user',
-    method: 'post',
-    data: data
-  })
-}
 
 // 修改用户
 export function updateUser(data) {
   return request({
     url: '/system/user',
-    method: 'put',
-    data: data
-  })
-}
-
-// 删除用户
-export function delUser(userId) {
-  return request({
-    url: '/system/user/' + userId,
-    method: 'delete'
-  })
-}
-
-// 用户密码重置
-export function resetUserPwd(userId, password) {
-  const data = {
-    userId,
-    password
-  }
-  return request({
-    url: '/system/user/resetPwd',
-    method: 'put',
-    data: data
-  })
-}
-
-// 用户状态修改
-export function changeUserStatus(userId, status) {
-  const data = {
-    userId,
-    status
-  }
-  return request({
-    url: '/system/user/changeStatus',
     method: 'put',
     data: data
   })
@@ -135,13 +156,5 @@ export function updateAuthRole(data) {
     url: '/system/user/authRole',
     method: 'put',
     params: data
-  })
-}
-
-// 查询部门下拉树结构
-export function deptTreeSelect() {
-  return request({
-    url: '/system/user/deptTree',
-    method: 'get'
   })
 }
