@@ -73,9 +73,8 @@ export default {
   components: { userAvatar, userInfo, resetPwd },
   data() {
     return {
-      user: undefined,
+      user: {},
       roleGroup: undefined,
-      postGroup: {},
       activeTab: "userinfo"
     };
   },

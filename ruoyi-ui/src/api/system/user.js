@@ -93,6 +93,15 @@ export function updateInfo(data) {
   })
 }
 
+// 用户密码重置
+export function updateUserPwd(data) {
+  return request({
+    url: USER_URL + '/user/update/password',
+    method: 'post',
+    data
+  })
+}
+
 // // 查询用户列表
 // export function listUser(query) {
 //   return request({
@@ -126,19 +135,6 @@ export function updateUserProfile(data) {
     url: '/system/user/profile',
     method: 'put',
     data: data
-  })
-}
-
-// 用户密码重置
-export function updateUserPwd(oldPassword, newPassword) {
-  const data = {
-    oldPassword,
-    newPassword
-  }
-  return request({
-    url: '/system/user/profile/updatePwd',
-    method: 'put',
-    params: data
   })
 }
 
