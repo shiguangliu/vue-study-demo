@@ -1,5 +1,38 @@
 import request from '@/utils/request'
 
+// 后台服务API路由
+const USER_URL = process.env.VUE_APP_BASE_API
+
+// 查询列表
+export function listDict(data) {
+  return request({
+    url: USER_URL + '/sys_dict/list',
+    method: 'post',
+    data
+  })
+}
+
+// 新增
+export function addDict(data) {
+  return request({
+    url: USER_URL + '/sys_dict/add',
+    method: 'post',
+    data
+  })
+}
+
+// 修改状态
+export function updDictStatus(data) {
+  return request({
+    url: USER_URL + '/sys_dict/upd/status',
+    method: 'post',
+    data
+  })
+}
+
+
+
+
 // 查询字典类型列表
 export function listType(query) {
   return request({

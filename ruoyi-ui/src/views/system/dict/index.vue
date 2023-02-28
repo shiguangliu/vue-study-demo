@@ -27,10 +27,10 @@
           style="width: 240px"
         >
           <el-option
-            v-for="dict in dict.type.sys_normal_disable"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="dict in statusList"
+            :key="dict.itemValue"
+            :label="dict.itemName"
+            :value="dict.itemValue"
           />
         </el-select>
       </el-form-item>
@@ -109,7 +109,7 @@
 
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编号" align="center" prop="dictId" />
+      <el-table-column label="字典编号" align="center" prop="id" />
       <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -118,12 +118,17 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          <el-switch
+            v-model="scope.row.status"
+            :active-value="1"
+            :inactive-value="2"
+            @change="handleStatusChange(scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+      <el-table-column label="备注" align="center" prop="remarks" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -169,14 +174,14 @@
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in dict.type.sys_normal_disable"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
+              v-for="dict in statusList"
+              :key="dict.itemValue"
+              :label="dict.itemValue"
+            >{{dict.itemName}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+        <el-form-item label="备注" prop="remarks">
+          <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -188,13 +193,14 @@
 </template>
 
 <script>
-import { listType, getType, delType, addType, updateType, refreshCache } from "@/api/system/dict/type";
+import { listDict,updDictStatus,addDict,listType, getType, delType, addType, updateType, refreshCache } from "@/api/system/dict/type";
+import { allDictType } from "@/api/system/logic";
 
 export default {
   name: "Dict",
-  dicts: ['sys_normal_disable'],
   data() {
     return {
+      statusList: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -237,15 +243,31 @@ export default {
     };
   },
   created() {
+    this.getStatusList();
     this.getList();
   },
   methods: {
+    getStatusList() {
+      const data = {
+        dictType: "status_dict",
+      }
+      allDictType(data).then(res => {
+        this.statusList = res.data.items;
+      });
+    },
     /** 查询字典类型列表 */
     getList() {
       this.loading = true;
-      listType(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.typeList = response.rows;
-          this.total = response.total;
+      if (this.dateRange.length > 0) {
+        this.queryParams.startTime = this.dateRange[0] + " 00:00:00";
+        this.queryParams.endTime = this.dateRange[1] + " 23:59:59";
+      } else {
+        this.queryParams.startTime = undefined;
+        this.queryParams.endTime = undefined;
+      }
+      listDict(this.queryParams).then(res => {
+          this.typeList = res.data.items;
+          this.total = res.data.total;
           this.loading = false;
         }
       );
@@ -261,8 +283,8 @@ export default {
         dictId: undefined,
         dictName: undefined,
         dictType: undefined,
-        status: "0",
-        remark: undefined
+        status: "1",
+        remarks: undefined
       };
       this.resetForm("form");
     },
@@ -310,13 +332,28 @@ export default {
               this.getList();
             });
           } else {
-            addType(this.form).then(response => {
+            addDict(this.form).then(res => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
             });
           }
         }
+      });
+    },
+    // 状态修改
+    handleStatusChange(row) {
+      let text = row.status === 1 ? "启用" : "停用";
+      this.$modal.confirm('确认要"' + text + '""' + row.dictName + '"角色吗？').then(function() {
+        const params = {
+          id: row.id,
+          status: row.status
+        }
+        return  updDictStatus(params);
+      }).then(() => {
+        this.$modal.msgSuccess(text + "成功");
+      }).catch(function() {
+        row.status = row.status === 2 ? 1 : 2;
       });
     },
     /** 删除按钮操作 */
