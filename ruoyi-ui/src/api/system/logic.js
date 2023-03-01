@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 后台服务API路由
-const USER_URL = process.env.VUE_APP_BASE_API
+const USER_URL = process.env.VUE_APP_USER_API
 
 // 查询用户列表
 export function allDictType(data) {
