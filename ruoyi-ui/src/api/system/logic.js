@@ -10,5 +10,4 @@ export function allDictType(data) {
       method: 'post',
       data
     })
-  }
-  
+}

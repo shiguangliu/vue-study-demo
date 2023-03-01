@@ -26,11 +26,11 @@
           clearable
           style="width: 240px"
         >
-          <el-option
-            v-for="dict in this.roleStatusList"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+        <el-option
+            v-for="dict in statusList"
+            :key="dict.itemValue"
+            :label="dict.itemName"
+            :value="dict.itemValue"
           />
         </el-select>
       </el-form-item>
@@ -195,10 +195,10 @@
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in roleStatusList"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
+              v-for="dict in statusList"
+              :key="dict.itemValue"
+              :label="dict.itemValue"
+            >{{dict.itemName}}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -244,6 +244,7 @@
 
 <script>
 import { list,getInfo,updRole,updStatus,batchDelRole,authList,resourceList, delRole, addRole, dataScope, roleBindResource } from "@/api/system/role";
+import { allDictType,roleAll } from "@/api/system/logic";
 
 export default {
   name: "Role",
@@ -252,14 +253,11 @@ export default {
     return {
       // 角色权限字符
       roleCodeList: [
-        { value: "USER", label: "USER" },
-        { value: "TEST", label: "TEST" }
+        { value: "USER", label: "用户" },
+        { value: "TEST", label: "测试" }
       ],
       // 角色状态列表
-      roleStatusList: [
-        { value: 1, label: "正常" },
-        { value: 2, label: "停用" }
-      ],
+      roleStatusList: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -315,9 +313,18 @@ export default {
     };
   },
   created() {
+    this.getStatusList();
     this.getList();
   },
   methods: {
+    getStatusList() {
+      const data = {
+        dictType: "status_dict",
+      }
+      allDictType(data).then(res => {
+        this.statusList = res.data.items;
+      });
+    },
     /** 查询角色列表 */
     getList() {
       this.loading = true;

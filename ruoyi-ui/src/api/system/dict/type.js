@@ -3,10 +3,28 @@ import request from '@/utils/request'
 // 后台服务API路由
 const USER_URL = process.env.VUE_APP_BASE_API
 
+// 查询所有
+export function allDict(data) {
+  return request({
+    url: USER_URL + '/sys_dict/all',
+    method: 'post',
+    data
+  })
+}
+
 // 查询列表
 export function listDict(data) {
   return request({
     url: USER_URL + '/sys_dict/list',
+    method: 'post',
+    data
+  })
+}
+
+// 详情
+export function infoDict(data) {
+  return request({
+    url: USER_URL + '/sys_dict/info',
     method: 'post',
     data
   })
@@ -21,6 +39,15 @@ export function addDict(data) {
   })
 }
 
+// 修改
+export function updDict(data) {
+  return request({
+    url: USER_URL + '/sys_dict/upd',
+    method: 'post',
+    data
+  })
+}
+
 // 修改状态
 export function updDictStatus(data) {
   return request({
@@ -30,49 +57,21 @@ export function updDictStatus(data) {
   })
 }
 
-
-
-
-// 查询字典类型列表
-export function listType(query) {
+// 删除
+export function delDict(data) {
   return request({
-    url: '/system/dict/type/list',
-    method: 'get',
-    params: query
-  })
-}
-
-// 查询字典类型详细
-export function getType(dictId) {
-  return request({
-    url: '/system/dict/type/' + dictId,
-    method: 'get'
-  })
-}
-
-// 新增字典类型
-export function addType(data) {
-  return request({
-    url: '/system/dict/type',
+    url: USER_URL + '/sys_dict/del',
     method: 'post',
-    data: data
+    data
   })
 }
 
-// 修改字典类型
-export function updateType(data) {
+// 批量删除
+export function delBatchDict(data) {
   return request({
-    url: '/system/dict/type',
-    method: 'put',
-    data: data
-  })
-}
-
-// 删除字典类型
-export function delType(dictId) {
-  return request({
-    url: '/system/dict/type/' + dictId,
-    method: 'delete'
+    url: USER_URL + '/sys_dict/del/batch',
+    method: 'post',
+    data
   })
 }
 

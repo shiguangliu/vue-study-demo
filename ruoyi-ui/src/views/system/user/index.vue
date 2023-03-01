@@ -22,9 +22,9 @@
             >
               <el-option
                 v-for="dict in statusList"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
+                :key="dict.itemValue"
+                :label="dict.itemName"
+                :value="dict.itemValue"
               />
             </el-select>
           </el-form-item>
@@ -243,9 +243,9 @@
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in statusList"
-                  :key="dict.value"
-                  :label="dict.value"
-                >{{dict.label}}</el-radio>
+                  :key="dict.itemValue"
+                  :label="dict.itemValue"
+                >{{dict.itemName}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -293,6 +293,7 @@
 import { listUser,updUserStatus, getUser,updUser, delUser, addUser,resetUserPwd,batchDelUser } from "@/api/system/user";
 import { roleAll } from "@/api/system/role";
 import { getToken } from "@/utils/auth";
+import { allDictType } from "@/api/system/logic";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -303,10 +304,7 @@ export default {
   data() {
     return {
       // 用户状态
-      statusList: [
-        { label: "正常", value: 1 },
-        { label: "停用", value: 2 }
-      ],
+      statusList: [],
       // 用户性别
       sexList: [
         { label: "男", value: 1 },
@@ -423,6 +421,7 @@ export default {
     }
   },
   created() {
+    this.getStatusList();
     this.getList();
     // this.getDeptTree();
     // this.getConfigKey("sys.user.initPassword").then(response => {
@@ -430,6 +429,14 @@ export default {
     // });
   },
   methods: {
+    getStatusList() {
+      const data = {
+        dictType: "status_dict",
+      }
+      allDictType(data).then(res => {
+        this.statusList = res.data.items;
+      });
+    },
     /** 查询用户列表 */
     getList() {
       this.loading = true;

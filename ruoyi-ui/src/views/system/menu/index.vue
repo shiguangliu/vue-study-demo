@@ -13,9 +13,9 @@
         <el-select v-model="queryParams.status" placeholder="菜单状态" clearable>
           <el-option
             v-for="dict in statusList"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            :key="dict.itemValue"
+            :label="dict.itemName"
+            :value="dict.itemValue"
           />
         </el-select>
       </el-form-item>
@@ -271,9 +271,9 @@
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in statusList"
-                  :key="dict.value"
-                  :label="dict.value"
-                >{{dict.label}}</el-radio>
+                  :key="dict.itemValue"
+                  :label="dict.itemValue"
+                >{{dict.itemName}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -289,6 +289,7 @@
 
 <script>
 import { listMenu, getMenu, delMenu, addMenu, updateMenu,updMenu } from "@/api/system/menu";
+import { allDictType } from "@/api/system/logic";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
@@ -316,16 +317,7 @@ export default {
         }
       ],
       // 状态
-      statusList: [
-        {
-          value: 1,
-          label: "正常"
-        },
-        {
-          value: 2,
-          label: "停用"
-        }
-      ],
+      statusList: [],
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -370,9 +362,18 @@ export default {
     };
   },
   created() {
+    this.getStatusList();
     this.getList();
   },
   methods: {
+    getStatusList() {
+      const data = {
+        dictType: "status_dict",
+      }
+      allDictType(data).then(res => {
+        this.statusList = res.data.items;
+      });
+    },
     // 选择图标
     selected(name) {
       this.form.icon = name;

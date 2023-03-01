@@ -1,5 +1,77 @@
 import request from '@/utils/request'
 
+// 后台服务API路由
+const USER_URL = process.env.VUE_APP_BASE_API
+
+// 查询列表
+export function listDictItems(data) {
+  return request({
+    url: USER_URL + '/sys_dict_items/list',
+    method: 'post',
+    data
+  })
+}
+
+// 详情
+export function infoDictItems(data) {
+  return request({
+    url: USER_URL + '/sys_dict_items/info',
+    method: 'post',
+    data
+  })
+}
+
+// 新增
+export function addDictItems(data) {
+  return request({
+    url: USER_URL + '/sys_dict_items/add',
+    method: 'post',
+    data
+  })
+}
+
+// 修改
+export function updDictItems(data) {
+  return request({
+    url: USER_URL + '/sys_dict_items/upd',
+    method: 'post',
+    data
+  })
+}
+
+// 修改状态
+export function updDictItemsStatus(data) {
+  return request({
+    url: USER_URL + '/sys_dict_items/upd/status',
+    method: 'post',
+    data
+  })
+}
+
+// 删除
+export function delDictItems(data) {
+  return request({
+    url: USER_URL + '/sys_dict_items/del',
+    method: 'post',
+    data
+  })
+}
+
+// 批量删除
+export function delBatchDictItems(data) {
+  return request({
+    url: USER_URL + '/sys_dict_items/del/batch',
+    method: 'post',
+    data
+  })
+}
+
+
+
+
+
+
+
 // 查询字典数据列表
 export function listData(query) {
   return request({
