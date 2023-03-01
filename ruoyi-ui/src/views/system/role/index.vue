@@ -27,7 +27,7 @@
           style="width: 240px"
         >
         <el-option
-            v-for="dict in statusList"
+            v-for="dict in roleStatusList"
             :key="dict.itemValue"
             :label="dict.itemName"
             :value="dict.itemValue"
@@ -195,7 +195,7 @@
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in statusList"
+              v-for="dict in roleStatusList"
               :key="dict.itemValue"
               :label="dict.itemValue"
             >{{dict.itemName}}</el-radio>
@@ -244,7 +244,7 @@
 
 <script>
 import { list,getInfo,updRole,updStatus,batchDelRole,authList,resourceList, delRole, addRole, dataScope, roleBindResource } from "@/api/system/role";
-import { allDictType,roleAll } from "@/api/system/logic";
+import { allDictType } from "@/api/system/logic";
 
 export default {
   name: "Role",
@@ -322,7 +322,7 @@ export default {
         dictType: "status_dict",
       }
       allDictType(data).then(res => {
-        this.statusList = res.data.items;
+        this.roleStatusList = res.data.items;
       });
     },
     /** 查询角色列表 */
