@@ -63,3 +63,6 @@ npm run build:stage
 # 构建生产环境
 npm run build:prod
 ```
+
+
+## 到docker中运行命令 docker run -d -p 8080:80 <镜像名称>
