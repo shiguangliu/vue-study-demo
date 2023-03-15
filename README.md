@@ -66,4 +66,4 @@ npm run build:prod
 
 
 ## 到docker中运行命令 docker run -d -p 8080:80 <镜像名称>
-## 拉取dockerhub镜像 登录dockerhub账号，搜索镜像仓库ubuntu，拉取镜像
+## 拉取dockerhub镜像 登录dockerhub账号，搜索镜像仓库ubuntu，选择对应的tag复制拉取命令，执行命令，查看镜像是否拉取成功
