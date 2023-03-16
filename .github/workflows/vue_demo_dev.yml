@@ -40,4 +40,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.USER_NAME }}/vue_demo_repository:latest
+          tags: ${{ secrets.USER_NAME }}/vue_demo_repository:v0.1
