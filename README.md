@@ -65,6 +65,20 @@ npm run build:prod
 ```
 
 
-## 到docker中运行命令 docker run -d -p 8080:80 <镜像名称>
+## 到docker中运行命令 docker run -d -p 8080:80 <镜像名称> 比如：docker run -itd --name redis-test -p 6379:6379 redis
 ## 拉取dockerhub镜像 登录dockerhub账号，搜索镜像仓库ubuntu，选择对应的tag复制拉取命令，执行命令，查看镜像是否拉取成功
 ## 本地登录服务器ssh root@43.143.253.52 -p 22 输入密码lsg15781012.
+
+## 运行nacos docker命令：docker run -d \
+-e PREFER_HOST_MODE=hostname \
+-e MODE=standalone \
+-e SPRING_DATASOURCE_PLATFORM=mysql \
+-e MYSQL_SERVICE_HOST=43.143.253.52 \
+-e MYSQL_SERVICE_PORT=3306 \
+-e MYSQL_SERVICE_USER=root \
+-e MYSQL_SERVICE_PASSWORD=123456 \
+-e MYSQL_SERVICE_DB_NAME=nacos_config \
+-p 8848:8848 \
+--name nacos-sa-mysql \
+--restart=always \
+nacos/nacos-server
