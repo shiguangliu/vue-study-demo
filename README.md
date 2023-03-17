@@ -66,6 +66,11 @@ npm run build:prod
 
 
 ## 到docker中运行命令 docker run -d -p 8080:80 <镜像名称> 比如：docker run -itd --name redis-test -p 6379:6379 redis
+# docker run -itd --name auth_repository -p 9401:9401 shiguangliu/auth_repository
+# docker run -itd --name gateway_repository -p 8090:8090 shiguangliu/gateway_repository
+# docker run -itd --name goods_repository -p 8011:8011 shiguangliu/goods_repository
+# docker run -itd --name user_repository -p 8010:8010 shiguangliu/user_repository
+# docker run -itd --name vue_demo_repository -p 8080:80 shiguangliu/vue_demo_repository
 ## 拉取dockerhub镜像 登录dockerhub账号，搜索镜像仓库ubuntu，选择对应的tag复制拉取命令，执行命令，查看镜像是否拉取成功
 ## 本地登录服务器ssh root@43.143.253.52 -p 22 输入密码lsg15781012.
 
