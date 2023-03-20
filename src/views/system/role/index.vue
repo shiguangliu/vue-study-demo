@@ -70,7 +70,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleBatchDelete"
-          v-hasPermi="['system:role:remove']"
+          v-hasPermi="['system:role:batch:del']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -132,15 +132,15 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:role:remove']"
+            v-hasPermi="['system:role:del']"
           >删除</el-button>
           <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:role:edit']">
             <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="handleDataScope" icon="el-icon-circle-check"
-                v-hasPermi="['system:role:edit']">数据权限</el-dropdown-item>
+                v-hasPermi="['system:role:bound:all']">数据权限</el-dropdown-item>
               <el-dropdown-item command="handleAuthUser" icon="el-icon-user"
-                v-hasPermi="['system:role:edit']">分配用户</el-dropdown-item>
+                v-hasPermi="['system:role:allot:user']">分配用户</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -235,7 +235,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitDataScope">确 定</el-button>
+        <el-button type="primary" @click="submitDataScope" v-hasPermi="['system:role:bind:menu']">确 定</el-button>
         <el-button @click="cancelDataScope">取 消</el-button>
       </div>
     </el-dialog>
@@ -243,7 +243,7 @@
 </template>
 
 <script>
-import { list,getInfo,updRole,updStatus,batchDelRole,authList,resourceList, delRole, addRole, dataScope, roleBindResource } from "@/api/system/role";
+import { list,getInfo,updRole,updStatus,batchDelRole,authList,resourceList, delRole, addRole, roleBindResource } from "@/api/system/role";
 import { allDictType } from "@/api/system/logic";
 
 export default {
@@ -411,7 +411,7 @@ export default {
     },
     // 树权限（父子联动）
     handleCheckedTreeConnect(value) {
-      this.deptCheckStrictly = value ? true: false
+      this.deptCheckStrictly = !!value
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -452,7 +452,7 @@ export default {
           let checkedKeys = response.data.resourceIds
           this.$nextTick(() => {
             this.$refs.dept.setCheckedKeys(checkedKeys);
-        });
+          });
         })
         this.title = "分配数据权限";
       });

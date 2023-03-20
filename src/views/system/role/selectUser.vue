@@ -45,7 +45,7 @@
       />
     </el-row>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSelectUser">确 定</el-button>
+      <el-button type="primary" @click="handleSelectUser" v-hasPermi="['system:role:bind:user']">确 定</el-button>
       <el-button @click="visible = false">取 消</el-button>
     </div>
   </el-dialog>

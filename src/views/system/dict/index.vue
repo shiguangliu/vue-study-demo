@@ -81,7 +81,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDeleteBatch"
-          v-hasPermi="['system:dict:remove']"
+          v-hasPermi="['system:dict:batch:del']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -148,7 +148,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:dict:remove']"
+            v-hasPermi="['system:dict:del']"
           >删除</el-button>
         </template>
       </el-table-column>

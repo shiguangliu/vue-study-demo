@@ -28,12 +28,12 @@
       <el-table-column label="角色名称" align="center" prop="name" />
       <el-table-column label="权限字符" align="center" prop="roleCode" />
     </el-table>
-    
+
     <!-- <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" /> -->
 
     <el-form label-width="100px">
       <el-form-item style="text-align: center;margin-left:-120px;margin-top:30px;">
-        <el-button type="primary" @click="submitForm()">提交</el-button>
+        <el-button type="primary" v-hasPermi="['system:user:bind:role']" @click="submitForm()">提交</el-button>
         <el-button @click="close()">返回</el-button>
       </el-form-item>
     </el-form>

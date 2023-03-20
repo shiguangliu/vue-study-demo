@@ -71,13 +71,13 @@
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime">
-        <template slot-scope="scope"> 
+        <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button 
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -96,7 +96,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:menu:remove']"
+            v-hasPermi="['system:menu:del']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -128,7 +128,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="form.type != 3">
+          <el-col :span="24" v-if="form.type !== 3">
             <el-form-item label="菜单图标" prop="icon">
               <el-popover
                 placement="bottom-start"
@@ -151,8 +151,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="菜单名称" prop="title">
+            <el-form-item v-if="form.type === 1" label="目录名称" prop="title">
+              <el-input v-model="form.title" placeholder="请输入目录名称" />
+            </el-form-item>
+            <el-form-item v-if="form.type === 2" label="菜单名称" prop="title">
               <el-input v-model="form.title" placeholder="请输入菜单名称" />
+            </el-form-item>
+            <el-form-item v-if="form.type === 3" label="按钮名称" prop="title">
+              <el-input v-model="form.title" placeholder="请输入按钮名称" />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="12">
@@ -174,7 +180,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col> -->
-          <el-col :span="12" v-if="form.type != 3">
+          <el-col :span="12" v-if="form.type !== 3">
             <el-form-item prop="path">
               <span slot="label">
                 <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
@@ -185,7 +191,7 @@
               <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.type == 2">
+          <el-col :span="12" v-if="form.type === 2">
             <el-form-item prop="component">
               <span slot="label">
                 <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
@@ -196,7 +202,7 @@
               <el-input v-model="form.component" placeholder="请输入组件路径" />
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.type == 3">
+          <el-col :span="12" v-if="form.type === 3">
             <el-form-item prop="backPath">
               <span slot="label">
                 <el-tooltip content="访问的后台接口路径，如：`/user/list`" placement="top">
@@ -207,7 +213,7 @@
               <el-input v-model="form.backPath" placeholder="请输入接口路径" />
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.type == 3">
+          <el-col :span="12" v-if="form.type === 3">
             <el-form-item prop="perms">
               <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
               <span slot="label">
