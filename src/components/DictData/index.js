@@ -22,15 +22,18 @@ function install() {
   Vue.use(DataDict, {
     metas: {
       '*': {
-        labelField: 'dictLabel',
-        valueField: 'dictValue',
+        labelField: 'itemName',
+        valueField: 'itemValue',
         request(dictMeta) {
           const storeDict = searchDictByKey(store.getters.dict, dictMeta.type)
           if (storeDict) {
             return new Promise(resolve => { resolve(storeDict) })
           } else {
             return new Promise((resolve, reject) => {
-              getDicts(dictMeta.type).then(res => {
+              const params = {
+                dictType: dictMeta.type,
+              }
+              getDicts(params).then(res => {
                 store.dispatch('dict/setDict', { key: dictMeta.type, value: res.data })
                 resolve(res.data)
               }).catch(error => {

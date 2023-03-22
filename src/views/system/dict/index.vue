@@ -27,10 +27,10 @@
           style="width: 240px"
         >
           <el-option
-            v-for="dict in statusList"
-            :key="dict.itemValue"
-            :label="dict.itemName"
-            :value="dict.itemValue"
+            v-for="dict in dict.type.status_dict"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
           />
         </el-select>
       </el-form-item>
@@ -174,10 +174,10 @@
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in statusList"
-              :key="dict.itemValue"
-              :label="dict.itemValue"
-            >{{dict.itemName}}</el-radio>
+              v-for="dict in dict.type.status_dict"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
@@ -194,13 +194,12 @@
 
 <script>
 import { listDict,updDictStatus,addDict,infoDict,updDict,delDict, delBatchDict, refreshCache } from "@/api/system/dict/type";
-import { allDictType } from "@/api/system/logic";
 
 export default {
   name: "Dict",
+  dicts: ['status_dict'],
   data() {
     return {
-      statusList: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -243,18 +242,9 @@ export default {
     };
   },
   created() {
-    this.getStatusList();
     this.getList();
   },
   methods: {
-    getStatusList() {
-      const data = {
-        dictType: "status_dict",
-      }
-      allDictType(data).then(res => {
-        this.statusList = res.data.items;
-      });
-    },
     /** 查询字典类型列表 */
     getList() {
       this.loading = true;

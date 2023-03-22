@@ -41,7 +41,7 @@ function responseConverter(response, dictMeta) {
     console.warn(`no dict data of "${dictMeta.type}" found in the response`)
     return []
   }
-  return dicts.map(d => dictConverter(d, dictMeta))
+  return dicts.items.map(d => dictConverter(d, dictMeta))
 }
 
 export function mergeOptions(src) {

@@ -26,11 +26,11 @@
           clearable
           style="width: 240px"
         >
-        <el-option
-            v-for="dict in roleStatusList"
-            :key="dict.itemValue"
-            :label="dict.itemName"
-            :value="dict.itemValue"
+          <el-option
+            v-for="dict in dict.type.status_dict"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
           />
         </el-select>
       </el-form-item>
@@ -195,10 +195,10 @@
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in roleStatusList"
-              :key="dict.itemValue"
-              :label="dict.itemValue"
-            >{{dict.itemName}}</el-radio>
+              v-for="dict in dict.type.status_dict"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -244,11 +244,10 @@
 
 <script>
 import { list,getInfo,updRole,updStatus,batchDelRole,authList,resourceList, delRole, addRole, roleBindResource } from "@/api/system/role";
-import { allDictType } from "@/api/system/logic";
 
 export default {
   name: "Role",
-  dicts: [],
+  dicts: ['status_dict'],
   data() {
     return {
       // 角色权限字符
@@ -256,8 +255,6 @@ export default {
         { value: "USER", label: "用户" },
         { value: "TEST", label: "测试" }
       ],
-      // 角色状态列表
-      roleStatusList: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -313,18 +310,9 @@ export default {
     };
   },
   created() {
-    this.getStatusList();
     this.getList();
   },
   methods: {
-    getStatusList() {
-      const data = {
-        dictType: "status_dict",
-      }
-      allDictType(data).then(res => {
-        this.roleStatusList = res.data.items;
-      });
-    },
     /** 查询角色列表 */
     getList() {
       this.loading = true;

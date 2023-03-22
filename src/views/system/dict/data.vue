@@ -22,10 +22,10 @@
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="数据状态" clearable>
           <el-option
-            v-for="dict in statusList"
-            :key="dict.itemValue"
-            :label="dict.itemName"
-            :value="dict.itemValue"
+            v-for="dict in dict.type.status_dict"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
           />
         </el-select>
       </el-form-item>
@@ -176,10 +176,10 @@
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in statusList"
-              :key="dict.itemValue"
-              :label="dict.itemValue"
-            >{{dict.itemName}}</el-radio>
+              v-for="dict in dict.type.status_dict"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
@@ -197,11 +197,11 @@
 <script>
 import { listDictItems,infoDictItems,updDictItems, delDictItems, delBatchDictItems, addDictItems, updDictItemsStatus } from "@/api/system/dict/data";
 import { allDict } from "@/api/system/dict/type";
-import { allDictType } from "@/api/system/logic";
+// import { allDictType } from "@/api/system/logic";
 
 export default {
   name: "Data",
-  // dicts: ['sys_normal_disable'],
+  dicts: ['status_dict'],
   data() {
     return {
       statusList: [],
@@ -282,7 +282,6 @@ export default {
     const dictId = this.$route.params && this.$route.params.dictId;
     this.queryParams.dictId = Number(dictId);
     this.defaultDictId = Number(dictId);
-    this.getStatusList();
     this.getList();
     this.getAllDict();
   },
@@ -291,14 +290,6 @@ export default {
       const data = {}
       allDict(data).then(res => {
         this.typeOptions = res.data.items
-      });
-    },
-    getStatusList() {
-      const data = {
-        dictType: "status_dict",
-      }
-      allDictType(data).then(res => {
-        this.statusList = res.data.items;
       });
     },
     /** 查询字典类型详细 */

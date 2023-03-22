@@ -3,6 +3,15 @@ import request from '@/utils/request'
 // 后台服务API路由
 const USER_URL = process.env.VUE_APP_USER_API
 
+// 根据字典类型查询字典数据信息
+export function getDicts(data) {
+  return request({
+    url: USER_URL + '/sys_dict_items/all',
+    method: 'post',
+    data
+  })
+}
+
 // 查询列表
 export function listDictItems(data) {
   return request({
@@ -89,13 +98,7 @@ export function getData(dictCode) {
   })
 }
 
-// 根据字典类型查询字典数据信息
-export function getDicts(dictType) {
-  return request({
-    url: '/system/dict/data/type/' + dictType,
-    method: 'get'
-  })
-}
+
 
 // 新增字典数据
 export function addData(data) {
