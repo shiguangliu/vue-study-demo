@@ -123,10 +123,7 @@ import selectUser from "./selectUser";
 
 export default {
   name: "AuthUser",
-  statusList: [
-        { value: 1, label: "正常" },
-        { value: 2, label: "停用" }
-      ],
+  dicts: [],
   components: { selectUser },
   data() {
     return {

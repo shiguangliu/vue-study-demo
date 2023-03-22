@@ -197,14 +197,12 @@
 <script>
 import { listDictItems,infoDictItems,updDictItems, delDictItems, delBatchDictItems, addDictItems, updDictItemsStatus } from "@/api/system/dict/data";
 import { allDict } from "@/api/system/dict/type";
-// import { allDictType } from "@/api/system/logic";
 
 export default {
   name: "Data",
   dicts: ['status_dict'],
   data() {
     return {
-      statusList: [],
       // 遮罩层
       loading: true,
       // 选中数组

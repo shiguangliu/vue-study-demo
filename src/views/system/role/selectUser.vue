@@ -54,7 +54,7 @@
 <script>
 import { unbindUserList,bind } from "@/api/system/role";
 export default {
-  // dicts: ['sys_normal_disable'],
+  dicts: [],
   props: {
     // 角色编号
     roleId: {
