@@ -70,6 +70,7 @@ import { getInfo } from "@/api/login";
 
 export default {
   name: "Profile",
+  dicts: ['user_sex'],
   components: { userAvatar, userInfo, resetPwd },
   data() {
     return {
@@ -85,7 +86,7 @@ export default {
     getUser() {
       getInfo().then(res => {
         this.user = res.data;
-        this.roleGroup = res.data.roleNameList;
+        this.roleGroup = res.data.roleNames.join(", ");
       });
     }
   }

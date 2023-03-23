@@ -81,11 +81,20 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户名称" prop="username" :show-overflow-tooltip="true" />
       <el-table-column label="用户昵称" prop="nickname" :show-overflow-tooltip="true" />
+      <el-table-column label="性别" prop="sex">
+        <template v-slot="scope">
+          <el-tag v-for="item in dict.type.user_sex" v-if="item.value === scope.row.sex" :key="item.value">
+            {{item.label}}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
       <el-table-column label="手机" prop="phone" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status === 1 ? '' : 'danger'">{{ scope.row.status === 1 ? '正常' : '停用' }}</el-tag>
+        <template v-slot="scope">
+          <el-tag v-for="item in dict.type.status_dict" v-if="item.value === scope.row.status" :key="item.value">
+            {{item.label}}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="绑定时间" align="center" prop="bindTime" width="180">
@@ -123,7 +132,7 @@ import selectUser from "./selectUser";
 
 export default {
   name: "AuthUser",
-  dicts: [],
+  dicts: ['status_dict','user_sex'],
   components: { selectUser },
   data() {
     return {

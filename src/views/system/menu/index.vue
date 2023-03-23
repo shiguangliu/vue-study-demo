@@ -66,8 +66,10 @@
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="backPath" label="接口路径" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="status" label="状态" width="80">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status === 1 ? '' : 'danger'">{{ scope.row.status === 1 ? '正常' : '停用' }}</el-tag>
+        <template v-slot="scope">
+          <el-tag v-for="item in dict.type.status_dict" v-if="item.value === scope.row.status" :key="item.value">
+            {{item.label}}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime">
@@ -294,7 +296,7 @@
 </template>
 
 <script>
-import { listMenu, getMenu, delMenu, addMenu, updateMenu,updMenu } from "@/api/system/menu";
+import { listMenu, getMenu, delMenu, addMenu, updMenu } from "@/api/system/menu";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
@@ -462,7 +464,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
+          if (this.form.id !== undefined) {
             updMenu(this.form).then(res => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;

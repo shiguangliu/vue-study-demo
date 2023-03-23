@@ -72,16 +72,6 @@
         <el-button
           type="warning"
           plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:dict:export']"
-        >导出</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
           icon="el-icon-close"
           size="mini"
           @click="handleClose"
@@ -270,9 +260,6 @@ export default {
         itemValue: [
           { required: true, message: "数据键值不能为空", trigger: "blur" }
         ]
-        // dictSort: [
-        //   { required: true, message: "数据顺序不能为空", trigger: "blur" }
-        // ]
       }
     };
   },
@@ -290,20 +277,6 @@ export default {
         this.typeOptions = res.data.items
       });
     },
-    /** 查询字典类型详细 */
-    // getType(dictId) {
-    //   getType(dictId).then(response => {
-    //     this.queryParams.dictType = response.data.dictType;
-    //     this.defaultDictType = response.data.dictType;
-    //     // this.getList();
-    //   });
-    // },
-    /** 查询字典类型列表 */
-    // getTypeList() {
-    //   getDictOptionselect().then(response => {
-    //     this.typeOptions = response.data;
-    //   });
-    // },
     /** 查询字典数据列表 */
     getList() {
       this.loading = true;
@@ -355,7 +328,7 @@ export default {
       this.open = true;
       this.title = "添加字典数据";
       this.typeOptions.forEach(item => {
-        if (item.id == this.queryParams.dictId) {
+        if (item.id === this.queryParams.dictId) {
           this.form.dictType = item.dictType
         }
       })
@@ -363,7 +336,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
@@ -387,9 +360,9 @@ export default {
             this.$modal.msgWarning("数据键值必须为数字");
             return;
           }
-          if (this.form.id != undefined) {
+          if (this.form.id !== undefined) {
             updDictItems(this.form).then(response => {
-              // this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
+              this.$store.dispatch('dict/removeDict', this.form.dictType);
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -397,7 +370,7 @@ export default {
           } else {
             this.form.dictId = this.defaultDictId;
             addDictItems(this.form).then(response => {
-              // this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
+              this.$store.dispatch('dict/removeDict', this.form.dictType);
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -431,7 +404,7 @@ export default {
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-        // this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
+        this.$store.dispatch('dict/removeDict', row.dictType);
       }).catch(() => {});
     },
     handleDeleteBatch(row) {
@@ -443,15 +416,9 @@ export default {
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-        // this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
+        this.$store.dispatch('dict/removeDict', row.dictType);
       }).catch(() => {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('system/dict/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    }
   }
 };
 </script>

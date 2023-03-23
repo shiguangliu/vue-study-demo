@@ -106,10 +106,17 @@
           <el-table-column label="用户编号" align="center" key="id" prop="id" v-if="columns[0].visible" />
           <el-table-column label="用户名称" align="center" key="username" prop="username" v-if="columns[1].visible" :show-overflow-tooltip="true" />
           <el-table-column label="用户昵称" align="center" key="nickname" prop="nickname" v-if="columns[2].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="性别" align="center" key="sex" prop="sex" v-if="columns[8].visible">
+            <template v-slot="scope">
+                <el-tag v-for="item in dict.type.user_sex" v-if="item.value === scope.row.sex" :key="item.value">
+                  {{item.label}}
+                </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="手机号码" align="center" key="phone" prop="phone" v-if="columns[3].visible" width="120" />
           <el-table-column label="邮箱" align="center" key="email" prop="email" v-if="columns[4].visible" :show-overflow-tooltip="true" />
           <el-table-column label="上次登录时间" align="center" prop="loginTime" v-if="columns[5].visible" width="160">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <span>{{ parseTime(scope.row.loginTime) }}</span>
             </template>
           </el-table-column>
@@ -124,7 +131,7 @@
             </template>
           </el-table-column>
           <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[7].visible" width="160">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
@@ -201,7 +208,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item v-if="form.id == undefined" prop="password">
+            <el-form-item v-if="form.id === undefined" prop="password">
               <span slot="label">
                 <el-tooltip content="如不输入密码则生成默认密码" placement="top">
                 <i class="el-icon-question"></i>
@@ -219,25 +226,25 @@
                   :key="item.id"
                   :label="item.name"
                   :value="item.id"
-                  :disabled="item.status != 1"
+                  :disabled="item.status !== 1"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <!-- <el-col :span="12">
+          <el-col :span="12">
             <el-form-item label="用户性别">
               <el-select v-model="form.sex" placeholder="请选择性别">
                 <el-option
-                  v-for="dict in sexList"
+                  v-for="dict in dict.type.user_sex"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
                 ></el-option>
               </el-select>
             </el-form-item>
-          </el-col> -->
+          </el-col>
           <el-col :span="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
@@ -290,7 +297,18 @@
 </template>
 
 <script>
-import { listUser,updUserStatus, getUser,updUser, delUser, addUser,resetUserPwd,batchDelUser } from "@/api/system/user";
+import {
+  listUser,
+  updUserStatus,
+  getUser,
+  updUser,
+  delUser,
+  addUser,
+  resetUserPwd,
+  batchDelUser,
+  downloadTemplate,
+  userDownload
+} from "@/api/system/user";
 import { roleAll } from "@/api/system/role";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
@@ -302,11 +320,6 @@ export default {
   components: { Treeselect },
   data() {
     return {
-      // 用户性别
-      sexList: [
-        { label: "男", value: 1 },
-        { label: "女", value: 2 }
-      ],
       disabledFlag: false,
       // 角色选项
       roleOptions: [],
@@ -377,7 +390,8 @@ export default {
         { key: 4, label: `邮箱`, visible: true },
         { key: 5, label: `上次登录时间`, visible: true },
         { key: 6, label: `状态`, visible: true },
-        { key: 7, label: `创建时间`, visible: true }
+        { key: 7, label: `创建时间`, visible: true },
+        { key: 8, label: `性别`, visible: true }
       ],
       // 表单校验
       rules: {
@@ -512,7 +526,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id);
-      this.single = selection.length != 1;
+      this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
     // 更多操作触发
@@ -538,6 +552,7 @@ export default {
         this.form.status = 1
         this.disabledFlag = false
       });
+      this.form.sex = 1
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -587,7 +602,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
+          if (this.form.id !== undefined) {
             updUser(this.form).then(res => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -629,9 +644,12 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/user/export', {
-        ...this.queryParams
-      }, `user_${new Date().getTime()}.xlsx`)
+      userDownload(this.queryParams).then(res => {
+        this.$modal.msgSuccess("下载成功");
+      })
+      // this.download('system/user/export', {
+      //   ...this.queryParams
+      // }, `user_${new Date().getTime()}.xlsx`)
     },
     /** 导入按钮操作 */
     handleImport() {
@@ -640,8 +658,11 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      this.download('system/user/importTemplate', {
-      }, `user_template_${new Date().getTime()}.xlsx`)
+      downloadTemplate().then(res => {
+        this.$modal.msgSuccess("下载成功");
+      })
+      // this.download('system/user/importTemplate', {
+      // }, `user_template_${new Date().getTime()}.xlsx`)
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
