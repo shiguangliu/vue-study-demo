@@ -284,8 +284,8 @@
           <div class="el-upload__tip" slot="tip">
             <el-checkbox v-model="upload.updateSupport" /> 是否更新已经存在的用户数据
           </div>
-          <span>仅允许导入xls、xlsx格式文件。</span>
-          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate">下载模板</el-link>
+          <span>仅允许导入xlsx格式文件。</span>
+          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate" v-hasPermi="['system:user:down:template']">下载模板</el-link>
         </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
@@ -313,6 +313,9 @@ import { roleAll } from "@/api/system/role";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {blobValidate} from "@/utils/ruoyi";
+import errorCode from "@/utils/errorCode";
+import {Loading, Message} from "element-ui";
 
 export default {
   name: "User",
@@ -370,7 +373,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/user/importData"
+        url: process.env.VUE_APP_BASE_API + process.env.VUE_APP_USER_API + "/user/import"
       },
       // 查询参数
       queryParams: {
@@ -644,12 +647,16 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      userDownload(this.queryParams).then(res => {
-        this.$modal.msgSuccess("下载成功");
-      })
-      // this.download('system/user/export', {
-      //   ...this.queryParams
-      // }, `user_${new Date().getTime()}.xlsx`)
+      const data ={
+        keyword: this.queryParams.keyword,
+        startTime: this.queryParams.startTime,
+        endTime: this.queryParams.endTime,
+        status: this.queryParams.status,
+      }
+      console.log(data)
+      this.download(process.env.VUE_APP_USER_API + "/user/download", {
+        ...data
+      }, `用户信息.xlsx`)
     },
     /** 导入按钮操作 */
     handleImport() {
@@ -658,11 +665,8 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      downloadTemplate().then(res => {
-        this.$modal.msgSuccess("下载成功");
-      })
-      // this.download('system/user/importTemplate', {
-      // }, `user_template_${new Date().getTime()}.xlsx`)
+      this.download(process.env.VUE_APP_USER_API + "/user/download/template", {
+      }, `用户模版.xlsx`)
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
@@ -673,7 +677,8 @@ export default {
       this.upload.open = false;
       this.upload.isUploading = false;
       this.$refs.upload.clearFiles();
-      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
+      console.log(response)
+      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.message + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
       this.getList();
     },
     // 提交上传文件

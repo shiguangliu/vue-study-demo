@@ -102,24 +102,6 @@ export function updateUserPwd(data) {
   })
 }
 
-// 下载模版
-export function downloadTemplate(data) {
-  return request({
-    url: USER_URL + '/user/download/template',
-    method: 'get',
-    data
-  })
-}
-
-// 下载用户数据
-export function userDownload(data) {
-  return request({
-    url: USER_URL + '/user/download',
-    method: 'get',
-    data
-  })
-}
-
 // // 查询用户列表
 // export function listUser(query) {
 //   return request({
