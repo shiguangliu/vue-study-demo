@@ -96,6 +96,8 @@ div:focus {
   }
 }
 
+
+
 aside {
   background: #eef1f6;
   padding: 8px 24px;
@@ -189,3 +191,42 @@ aside {
 .multiselect--active {
   z-index: 1000 !important;
 }
+
+// 答题页面左侧样式
+.remark{height: 24px;color: #333;margin: 20px 10px; position:absolute; text-align: center}
+.remark i{ width:14px; height:14px;background-color: #f8f8f8;border:1px solid #f1f1f1;display: inline-block;vertical-align: -4px; margin-left:20px;}
+.remark .err {background-color: #F57373;border:1px solid #e83828;}
+.remark .cur {background-color: #37b569;border:1px solid #08a95d;}
+.remark span{ margin:0 10px;font: 12px/24px "Microsoft Yahei";display: inline-block;}
+.exam_menu{height: 15px;color: #333; border-left: 3px solid #1f7ed0; text-indent:10px; font:14px/15px "Microsoft Yahei";margin:10px; margin-top:30px;}
+.exam_tab {min-height: 40px; overflow:hidden;}
+.m_ul {list-style-type: none;padding: 0px;margin-left:5px; overflow:hidden;}
+.m_ul li {list-style-type: none;margin: 5px;float:left; width: 26px;position: relative;text-align: center;font: 12px/26px tahoma,sans-serif,"SimSun";color: #666;height: 26px;background-color:#f8f8f8 ; border-radius:3px; border:1px solid #ddd; }
+.m_ul li:hover {cursor: pointer;background-color: #288ce2; border:1px solid #0973CE;color:#fff; }
+.m_ul .err {background-color: #F57373 !important;border:1px solid #e83828 !important; color:#fff;}
+.m_ul .cur {background-color: #37b569 !important;border:1px solid #08a95d !important;color:#fff;}
+.button {border: 0px;background-color:#288ce2;width: 100px;height: 35px;color: #fff;font-family:"Microsoft Yahei"; float:left; margin:0 10px; border-radius:3px; border:1px solid #0973CE; text-align:center;}
+
+/*******************做题右侧************************/
+.exam_main{ min-height: 520px; overflow:hidden; background-color: #FFF; position:relative; box-shadow:0 1px 2px rgba(0, 0, 0, 0.1); margin-bottom:10px;}
+.exam_main_home{width: 680px; height:auto; overflow:hidden;margin: 30px 10px 0px 10px;}
+.exam_itembox {width: 680px; min-height:60px; float: left; overflow:hidden;padding-bottom: 10px;border-bottom: 1px dotted #ddd;}
+.exam_no{ float:left; width: 70px; overflow:hidden;background: url(../../assets/images/bg.png) no-repeat -40px 0px;}
+.tab_no {width:60px;height: 31px;font:22px/31px "Microsoft Yahei";text-align: center;color:#288ce2;}
+.exam_itemtype {width:60px;height: 28px;font:12px/28px "Microsoft Yahei";text-align: center; color: #FFF;}
+.tab_question { float:right; width:600px;min-height: 55px;font: 20px  "Microsoft Yahei"; margin:0 5px;}
+.tab_question p{ margin:0;}
+.tab_answer_dv{width: 660px; min-height:90px;float:left; border-bottom:1px dotted #ddd; padding:10px; font-size:14px; font-family:"Microsoft Yahei";}
+#gongshiBox{width: 660px; min-height:90px;float:left; border-bottom:1px dotted #ddd; padding:10px; font-size:14px; font-family:"Microsoft Yahei";}
+.tab_answer {margin: 10px 0;height:auto;background-color: #FFF;font: 14px/28px 宋体; padding-left:30px;}
+//.tab_answer.green{ background:url(../Images/icon3.png) left 0 no-repeat;}
+//.tab_answer.red{ background:url(../Images/icon3.png) left -30px no-repeat;}
+.tab_answer label{ margin:10px;}
+.buttonsbox{ width:680px; min-height:36px; height:auto; overflow:hidden; padding:20px 0;float: left;border-bottom: 1px dotted #ddd;}
+.button {border: 0px;background-color:#288ce2;width: 100px;height: 35px;color: #fff;font-family:"Microsoft Yahei"; float:left; margin:0 10px; border-radius:3px; border:1px solid #0973CE; text-align:center;}
+.button:hover {cursor: pointer;background-color:#0973CE;border:1px solid #0973CE;}
+.btninfor{min-width:370px; height:35px;float:right;font:14px/35px "Microsoft Yahei"; color:#333; margin-top:5px;}
+.btninfor .btn{ margin:0px 10px; padding-left:25px;}
+.btninfor .btn:hover{color:#f95757;}
+.btn_cal{height: 24px; width: 50px; font-family:"Microsoft Yahei";background-color: #0094ff; color: #FFF; background-color:#f8f8f8 ; border-radius:3px; border:1px solid #f1f1f1; margin-left:10px; color:#666;}
+.btn_cal:hover{cursor:pointer;}
