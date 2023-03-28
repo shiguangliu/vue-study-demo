@@ -19,7 +19,7 @@
             <div class="exam_tab">
               <ul class="m_ul">
                 <li
-                  v-bind:class="card_result(question)" @click="showQuestion(index + 1)"
+                  v-bind:class="card_result(index)" @click="showQuestion(index + 1)"
                    v-for="(question,index) in safetyList" :key="question.id">{{index + 1}}</li>
               </ul>
             </div>
@@ -44,18 +44,18 @@
               </div>
               <div class="tab_answer_dv" >
                 <el-radio-group v-model="from.answer" v-show="currentTopic.type === 1 || currentTopic.type === 3">
-                  <el-radio v-if="currentTopic.optionA !== ''" label="A">{{currentTopic.optionA}}</el-radio>
-                  <el-radio v-if="currentTopic.optionB !== ''" label="B">{{currentTopic.optionB}}</el-radio>
-                  <el-radio v-if="currentTopic.optionC !== ''" label="C">{{currentTopic.optionC}}</el-radio>
-                  <el-radio v-if="currentTopic.optionD !== ''" label="D">{{currentTopic.optionD}}</el-radio>
-                  <el-radio v-if="currentTopic.optionE !== ''" label="E">{{currentTopic.optionE}}</el-radio>
+                  <el-radio v-if="currentTopic.optionA !== ''" label="A" style="display: block; padding-top: 10px;">{{currentTopic.optionA}}</el-radio>
+                  <el-radio v-if="currentTopic.optionB !== ''" label="B" style="display: block; padding-top: 10px;">{{currentTopic.optionB}}</el-radio>
+                  <el-radio v-if="currentTopic.optionC !== ''" label="C" style="display: block; padding-top: 10px;">{{currentTopic.optionC}}</el-radio>
+                  <el-radio v-if="currentTopic.optionD !== ''" label="D" style="display: block; padding-top: 10px;">{{currentTopic.optionD}}</el-radio>
+                  <el-radio v-if="currentTopic.optionE !== ''" label="E" style="display: block; padding-top: 10px;">{{currentTopic.optionE}}</el-radio>
                 </el-radio-group>
                 <el-checkbox-group v-model="from.answers" v-show="currentTopic.type === 2">
-                  <el-checkbox v-if="currentTopic.optionA !== ''" label="A">{{currentTopic.optionA}}</el-checkbox>
-                  <el-checkbox v-if="currentTopic.optionB !== ''" label="B">{{currentTopic.optionB}}</el-checkbox>
-                  <el-checkbox v-if="currentTopic.optionC !== ''" label="C">{{currentTopic.optionC}}</el-checkbox>
-                  <el-checkbox v-if="currentTopic.optionD !== ''" label="D">{{currentTopic.optionD}}</el-checkbox>
-                  <el-checkbox v-if="currentTopic.optionE !== ''" label="E">{{currentTopic.optionE}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionA !== ''" label="A" style="display: block; padding-top: 10px;">{{currentTopic.optionA}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionB !== ''" label="B" style="display: block; padding-top: 10px;">{{currentTopic.optionB}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionC !== ''" label="C" style="display: block; padding-top: 10px;">{{currentTopic.optionC}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionD !== ''" label="D" style="display: block; padding-top: 10px;">{{currentTopic.optionD}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionE !== ''" label="E" style="display: block; padding-top: 10px;">{{currentTopic.optionE}}</el-checkbox>
                 </el-checkbox-group>
               </div>
             </div>
@@ -78,6 +78,7 @@ export default {
   dicts: ['topic_type'],
   data() {
     return {
+      answerList: [], // 答案列表
       currentTopic:{},// 当前题
       tabNo: 1, // 当前题号
       total: 0, // 考试总题数
@@ -111,25 +112,163 @@ export default {
         answers: []
       }
     },
-    card_result: function (question) {
-      if (question.answer === question.answer) {
-        return 'cur';
-      } else if (question.answer === '') {
-        return 'mid';
-      } else {
-        return 'err';
-      }
+    card_result: function (index) {
+      let className = '';
+      // 循环判断是否已经答题
+       this.answerList.forEach(item => {
+          if (item.tabNo === index + 1) {
+            if (item.flag) {
+              className = 'cur'
+              return {'cur':true,'err':false,'mid':false}
+            } else if (!item.flag) {
+              className = 'err'
+              return {'cur':false,'err':true,'mid':false}
+            } else {
+              className = 'mid'
+              return {'cur':false,'err':false,'mid':true}
+            }
+          }
+        })
+      return className
     },
     showQuestion(tabNo){
-      this.reset()
+      let flag = false;
+      // 判断是否已经答题
+      this.answerList.forEach(item => {
+        if (item.tabNo === tabNo) {
+          this.from.topicId = item.topicId
+          this.from.answer = item.answer
+          this.from.answers = item.answers
+          return flag = true;
+        }
+      })
+      if (!flag) {
+        this.reset()
+      }
       this.currentTopic = this.safetyList[tabNo - 1]
+      this.from.topicId = this.currentTopic.id
       this.tabNo = tabNo;
     },
+    // 显示上一题
     showPrevQuestion(){
-      this.tabNo--;
+      // 先判断下一题要不要掉用接口  然后再当前是否已经答题
+      let nextTabNo = this.tabNo // 下一题
+      let currentTabNo = this.tabNo - 1 // 当前题
+      // 判断下一题是否已经答题
+      let LastProblem = false // 下一题是否已经答题
+      this.answerList.forEach(item => {
+          if (item.tabNo === nextTabNo) {
+            return LastProblem = true;
+          }
+      })
+      // 如果下一题未答题并且已经选择答案 则调用答题接口
+      if (!LastProblem) {
+        if ((this.from.answer !== '' || this.from.answers.length > 0)) {
+          const data = {
+            id: this.from.topicId,
+            answer: this.from.answer || this.from.answers.sort().join('')
+          }
+          checkAnswer(data).then(res => {
+            this.answerList.push({
+              tabNo: nextTabNo,
+              topicId: this.from.topicId,
+              answer: this.from.answer,
+              answers: this.from.answers,
+              flag: res.data.flag
+            })
+            this.reset()
+            this.currentTopic = this.safetyList[currentTabNo - 1]
+            this.from.topicId = this.currentTopic.id
+            this.tabNo--;
+          })
+          return
+        }
+      }
+      this.showQuestion(currentTabNo)
+      // console.log('111111')
+      // // 判断当前题是否已经答题
+      // let flag = false;
+      // let matter = null
+      // this.answerList.forEach(item => {
+      //   if (item.tabNo === currentTabNo) {
+      //     matter = item
+      //     return flag = true
+      //   }
+      // })
+      // // 如果已经答题
+      // if (flag) {
+      //   this.from.topicId = matter.topicId
+      //   this.from.answer = matter.answer
+      //   this.from.answers = matter.answers
+      //   this.currentTopic = this.safetyList[currentTabNo - 1]
+      //   this.tabNo--;
+      // } else {
+      //   // 如果没有答题
+      //   this.reset()
+      //   this.currentTopic = this.safetyList[currentTabNo - 1]
+      //   this.from.topicId = this.currentTopic.id
+      //   this.tabNo--;
+      // }
     },
     showNextQuestion(){
-      this.tabNo++;
+      // 先判断上一题要不要掉用接口  然后再当前是否已经答题
+      let tabNo = this.tabNo + 1 // 下一题
+      let currentTabNo = this.tabNo // 当前题
+      // 判断上一题是否已经答题
+      let LastProblem = false
+      this.answerList.forEach(item => {
+        if (item.tabNo === currentTabNo) {
+          return LastProblem = true
+        }
+      })
+      // 如果上一题未答题并且已经选择答案 则调用答题接口
+      if (!LastProblem) {
+        // 如果选择了答案 则调用答题接口
+        if (this.from.answer !== '' || this.from.answers.length > 0) {
+          const data = {
+            id: this.from.topicId,
+            answer: this.from.answer || this.from.answers.sort().join('')
+          }
+          checkAnswer(data).then(res => {
+            this.answerList.push({
+              tabNo: currentTabNo,
+              flag: res.data.flag,
+              topicId: this.from.topicId,
+              answer: this.from.answer,
+              answers: this.from.answers,
+            })
+            this.reset()
+            this.currentTopic = this.safetyList[currentTabNo]
+            this.from.topicId = this.currentTopic.id
+            this.tabNo++;
+          })
+          return
+        }
+      }
+      this.showQuestion(tabNo)
+      // // 判断当前题是否已经答题
+      // let flag = false;
+      // let matter = null
+      // this.answerList.forEach(item => {
+      //   if (item.tabNo === tabNo) {
+      //     matter = item
+      //     return flag = true
+      //   }
+      // })
+      // // 如果已经答题
+      // if (flag) {
+      //   this.from.topicId = matter.topicId
+      //   this.from.answer = matter.answer
+      //   this.from.answers = matter.answers
+      //   this.currentTopic = this.safetyList[tabNo - 1]
+      //   this.tabNo++;
+      // } else {
+      //   // 如果没有答题
+      //   this.reset()
+      //   this.currentTopic = this.safetyList[tabNo - 1]
+      //   this.from.topicId = this.currentTopic.id
+      //   this.tabNo++;
+      // }
     },
     displayPrevQuestion(){
       return this.tabNo > 1;
