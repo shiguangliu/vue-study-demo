@@ -139,17 +139,11 @@ export default {
        this.answerList.forEach(item => {
           if (item.tabNo === index + 1) {
             if (item.flag) {
-              className = 'cur'
-              // return {'cur':true,'err':false,'mid':false}
-              return true // 退出循环
+              return className = 'cur' // 退出循环
             } else if (!item.flag) {
-              className = 'err'
-              // return {'cur':false,'err':true,'mid':false}
-              return true // 退出循环
+              return className = 'err' // 退出循环
             } else {
-              className = 'mid'
-              // return {'cur':false,'err':false,'mid':true}
-              return true // 退出循环
+              return className = 'mid' // 退出循环
             }
           }
         })
@@ -175,68 +169,9 @@ export default {
     },
     // 显示上一题
     async showPrevQuestion(){
-      // // 先判断下一题要不要掉用接口  然后再当前是否已经答题
-      // let nextTabNo = this.tabNo // 下一题
-      // let currentTabNo = this.tabNo - 1 // 当前题
-      // // 判断下一题是否已经答题
-      // let LastProblem = false // 下一题是否已经答题
-      // this.answerList.forEach(item => {
-      //     if (item.tabNo === nextTabNo) {
-      //       return LastProblem = true;
-      //     }
-      // })
-      // // 如果下一题未答题并且已经选择答案 则调用答题接口
-      // if (!LastProblem) {
-      //   if ((this.from.answer !== '' || this.from.answers.length > 0)) {
-      //     const data = {
-      //       id: this.from.topicId,
-      //       answer: this.from.answer || this.from.answers.sort().join('')
-      //     }
-      //     await checkAnswer(data).then(res => {
-      //       this.answerList.push({
-      //         tabNo: nextTabNo,
-      //         topicId: this.from.topicId,
-      //         answer: this.from.answer,
-      //         answers: this.from.answers,
-      //         flag: res.data.flag
-      //       })
-      //     })
-      //   }
-      // }
-      // this.showQuestion(currentTabNo)
       this.showQuestion(this.tabNo - 1)
     },
     async showNextQuestion(){
-      // // 先判断上一题要不要掉用接口  然后再当前是否已经答题
-      // let tabNo = this.tabNo + 1 // 下一题
-      // let currentTabNo = this.tabNo // 当前题
-      // // 判断上一题是否已经答题
-      // let LastProblem = false
-      // this.answerList.forEach(item => {
-      //   if (item.tabNo === currentTabNo) {
-      //     return LastProblem = true
-      //   }
-      // })
-      // // 如果上一题未答题并且已经选择答案 则调用答题接口
-      // if (!LastProblem) {
-      //   // 如果选择了答案 则调用答题接口
-      //   if (this.from.answer !== '' || this.from.answers.length > 0) {
-      //     const data = {
-      //       id: this.from.topicId,
-      //       answer: this.from.answer || this.from.answers.sort().join('')
-      //     }
-      //     await checkAnswer(data).then(res => {
-      //       this.answerList.push({
-      //         tabNo: currentTabNo,
-      //         flag: res.data.flag,
-      //         topicId: this.from.topicId,
-      //         answer: this.from.answer,
-      //         answers: this.from.answers,
-      //       })
-      //     })
-      //   }
-      // }
-      // this.showQuestion(tabNo)
       this.showQuestion(this.tabNo + 1)
     },
     submitAnswer(){
