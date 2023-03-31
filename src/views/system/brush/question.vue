@@ -58,28 +58,11 @@
                   <el-checkbox v-if="currentTopic.optionE !== ''" label="E" style="display: block; padding-top: 10px;">{{currentTopic.optionE}}</el-checkbox>
                 </el-checkbox-group>
               </div>
-              <div class="buttonsbox" >
-                <input @click="showPrevQuestion()" v-show="displayPrevQuestion()" type="button" class="button btn_last btn_qno" value="< 上一题">
-                <input @click="submitAnswer()" type="button" class="button btn_last btn_qno" value="提交答案">
-                <input @click="showNextQuestion()" v-show="displayNextQuestion()" type="button" class="button btn_next btn_qno" value="下一题 >">
-              </div>
             </div>
-            <div class="exam_analys" style="display: block;" v-show="isMyAnswerNull(this.tabNo)">
-              <i></i>
-              <div class="hd">
-                <span class="grey bold answerdb">
-                    我的答案：{{ this.myAnswer }}
-                </span>
-              </div>
-              <div class="hd">
-                <span class="green bold answerdb" v-html="'正确答案:' + this.rightAnswers">
-                </span>
-              </div>
-              <div class="key_box">
-                <h4>参考解析：</h4>
-                <p v-html=" this.analysis ">
-                </p>
-              </div>
+            <div class="buttonsbox" >
+              <input @click="showPrevQuestion()" v-show="displayPrevQuestion()" type="button" class="button btn_last btn_qno" value="< 上一题">
+              <input @click="showNextQuestion()" type="button" class="button btn_next btn_qno" value="提交答案">
+              <input @click="showNextQuestion()" v-show="displayNextQuestion()" type="button" class="button btn_next btn_qno" value="下一题 >">
             </div>
           </div>
         </el-card>
@@ -89,7 +72,7 @@
 </template>
 
 <script>
-import { randomExam, checkAnswer } from "@/api/system/brush/safety";
+import { questionRandomExam, questionCheckAnswer } from "@/api/system/brush/question";
 
 export default {
   name: "safety",
@@ -105,10 +88,7 @@ export default {
         topicId: 0,
         answer: '',
         answers: []
-      },
-      myAnswer: '', // 我的答案
-      rightAnswers: '', // 正确答案
-      analysis: '' // 解析
+      }
     };
   },
   created() {
@@ -116,7 +96,7 @@ export default {
   },
   methods: {
     getRandomExam() {
-      randomExam().then(res => {
+      questionRandomExam().then(res => {
         this.safetyList = res.data.items;
         this.total = res.data.total;
         if (this.total > 0) {
@@ -175,134 +155,73 @@ export default {
     },
     // 显示上一题
     async showPrevQuestion(){
-      // // 先判断下一题要不要掉用接口  然后再当前是否已经答题
-      // let nextTabNo = this.tabNo // 下一题
-      // let currentTabNo = this.tabNo - 1 // 当前题
-      // // 判断下一题是否已经答题
-      // let LastProblem = false // 下一题是否已经答题
-      // this.answerList.forEach(item => {
-      //     if (item.tabNo === nextTabNo) {
-      //       return LastProblem = true;
-      //     }
-      // })
-      // // 如果下一题未答题并且已经选择答案 则调用答题接口
-      // if (!LastProblem) {
-      //   if ((this.from.answer !== '' || this.from.answers.length > 0)) {
-      //     const data = {
-      //       id: this.from.topicId,
-      //       answer: this.from.answer || this.from.answers.sort().join('')
-      //     }
-      //     await checkAnswer(data).then(res => {
-      //       this.answerList.push({
-      //         tabNo: nextTabNo,
-      //         topicId: this.from.topicId,
-      //         answer: this.from.answer,
-      //         answers: this.from.answers,
-      //         flag: res.data.flag
-      //       })
-      //     })
-      //   }
-      // }
-      // this.showQuestion(currentTabNo)
-      this.showQuestion(this.tabNo - 1)
+      // 先判断下一题要不要掉用接口  然后再当前是否已经答题
+      let nextTabNo = this.tabNo // 下一题
+      let currentTabNo = this.tabNo - 1 // 当前题
+      // 判断下一题是否已经答题
+      let LastProblem = false // 下一题是否已经答题
+      this.answerList.forEach(item => {
+          if (item.tabNo === nextTabNo) {
+            return LastProblem = true;
+          }
+      })
+      // 如果下一题未答题并且已经选择答案 则调用答题接口
+      if (!LastProblem) {
+        if ((this.from.answer !== '' || this.from.answers.length > 0)) {
+          const data = {
+            id: this.from.topicId,
+            answer: this.from.answer || this.from.answers.sort().join('')
+          }
+          await questionCheckAnswer(data).then(res => {
+            this.answerList.push({
+              tabNo: nextTabNo,
+              topicId: this.from.topicId,
+              answer: this.from.answer,
+              answers: this.from.answers,
+              flag: res.data.flag
+            })
+          })
+        }
+      }
+      this.showQuestion(currentTabNo)
     },
     async showNextQuestion(){
-      // // 先判断上一题要不要掉用接口  然后再当前是否已经答题
-      // let tabNo = this.tabNo + 1 // 下一题
-      // let currentTabNo = this.tabNo // 当前题
-      // // 判断上一题是否已经答题
-      // let LastProblem = false
-      // this.answerList.forEach(item => {
-      //   if (item.tabNo === currentTabNo) {
-      //     return LastProblem = true
-      //   }
-      // })
-      // // 如果上一题未答题并且已经选择答案 则调用答题接口
-      // if (!LastProblem) {
-      //   // 如果选择了答案 则调用答题接口
-      //   if (this.from.answer !== '' || this.from.answers.length > 0) {
-      //     const data = {
-      //       id: this.from.topicId,
-      //       answer: this.from.answer || this.from.answers.sort().join('')
-      //     }
-      //     await checkAnswer(data).then(res => {
-      //       this.answerList.push({
-      //         tabNo: currentTabNo,
-      //         flag: res.data.flag,
-      //         topicId: this.from.topicId,
-      //         answer: this.from.answer,
-      //         answers: this.from.answers,
-      //       })
-      //     })
-      //   }
-      // }
-      // this.showQuestion(tabNo)
-      this.showQuestion(this.tabNo + 1)
-    },
-    submitAnswer(){
-      // 判断当前题是否已经答题
+      // 先判断上一题要不要掉用接口  然后再当前是否已经答题
+      let tabNo = this.tabNo + 1 // 下一题
+      let currentTabNo = this.tabNo // 当前题
+      // 判断上一题是否已经答题
       let LastProblem = false
       this.answerList.forEach(item => {
-        if (item.tabNo === this.tabNo) {
+        if (item.tabNo === currentTabNo) {
           return LastProblem = true
         }
       })
-      if (LastProblem) {
-        // 弹窗提示
-        this.$message({
-          message: '当前题已经答题',
-          type: 'warning'
-        });
-        return false
+      // 如果上一题未答题并且已经选择答案 则调用答题接口
+      if (!LastProblem) {
+        // 如果选择了答案 则调用答题接口
+        if (this.from.answer !== '' || this.from.answers.length > 0) {
+          const data = {
+            id: this.from.topicId,
+            answer: this.from.answer || this.from.answers.sort().join('')
+          }
+          await questionCheckAnswer(data).then(res => {
+            this.answerList.push({
+              tabNo: currentTabNo,
+              flag: res.data.flag,
+              topicId: this.from.topicId,
+              answer: this.from.answer,
+              answers: this.from.answers,
+            })
+          })
+        }
       }
-      // 判断是否选择了答案
-      if (this.from.answer === '' && this.from.answers.length === 0) {
-        // 弹窗提示
-        this.$message({
-          message: '请选择答案',
-          type: 'warning'
-        });
-        return false
-      }
-      // 调用答题接口
-      const data = {
-        id: this.from.topicId,
-        answer: this.from.answer || this.from.answers.sort().join('')
-      }
-      checkAnswer(data).then(res => {
-        this.answerList.push({
-          tabNo: this.tabNo,
-          flag: res.data.flag,
-          topicId: this.from.topicId,
-          answer: this.from.answer,
-          answers: this.from.answers,
-          rightAnswers: res.data.answer, // 正确答案
-          analysis: res.data.analysis // 解析
-        })
-      })
+      this.showQuestion(tabNo)
     },
     displayPrevQuestion(){
       return this.tabNo > 1;
     },
     displayNextQuestion(){
       return this.tabNo < this.total;
-    },
-    isMyAnswerNull(tabNo) {
-      // 从this.answerList中获取答题数据
-      let resultAnswer = this.answerList.filter(item => {
-        return item.tabNo === tabNo
-      })
-      if (resultAnswer.length > 0) {
-        // 判断是否正确
-        if (resultAnswer[0].flag) {
-          return false
-        } else {
-          this.myAnswer = resultAnswer[0].answer || resultAnswer[0].answers
-          this.rightAnswers = resultAnswer[0].rightAnswers
-          return true
-        }
-      }
-      return false
     },
   }
 };
