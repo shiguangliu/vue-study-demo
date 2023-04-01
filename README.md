@@ -75,6 +75,9 @@ npm run build:prod
 ## 拉取dockerhub镜像 登录dockerhub账号，搜索镜像仓库ubuntu，选择对应的tag复制拉取命令，执行命令，查看镜像是否拉取成功
 ## 本地登录服务器ssh root@43.143.253.52 -p 22 输入密码lsg15781012.
 
+
+## 启动jar架包命令 java -Dfile.encoding=utf-8 -jar xxx.jar
+
 ## 运行nacos docker命令：docker run -d \
 -e PREFER_HOST_MODE=hostname \
 -e MODE=standalone \
