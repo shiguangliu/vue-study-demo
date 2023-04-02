@@ -77,6 +77,7 @@ npm run build:prod
 
 
 ## 启动jar架包命令 java -Dfile.encoding=utf-8 -jar xxx.jar
+## 运行javajar包：nohup java -Dfile.encoding=utf-8 -jar gateway-server-1.0-SNAPSHOT.jar &
 
 ## 运行nacos docker命令：docker run -d \
 -e PREFER_HOST_MODE=hostname \
