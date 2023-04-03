@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="20">
-      <!--用户数据-->
-      <el-col :span="20" :xs="24">
+<!--    <el-row :gutter="20">-->
+<!--      &lt;!&ndash;用户数据&ndash;&gt;-->
+<!--      <el-col :span="20" :xs="24">-->
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
           <el-form-item label="关键字" prop="keyword">
             <el-input
@@ -176,8 +176,8 @@
           :limit.sync="queryParams.pageSize"
           @pagination="getList"
         />
-      </el-col>
-    </el-row>
+<!--      </el-col>-->
+<!--    </el-row>-->
 
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
