@@ -74,10 +74,12 @@ npm run build:prod
 # 重新启动docker容器 docker restart <容器名称> 比如：docker restart redis-test
 ## 拉取dockerhub镜像 登录dockerhub账号，搜索镜像仓库ubuntu，选择对应的tag复制拉取命令，执行命令，查看镜像是否拉取成功
 ## 本地登录服务器ssh root@43.143.253.52 -p 22 输入密码lsg15781012.
+## 本地打镜像为linux/amd64架构的镜像：docker build --platform=linux/x86_64 . -f scripts/goods/Dockerfile -t goods-server:latest
+### docker build --platform=linux/x86_64 . -f dockerfile目录地址 -t 镜像名称:版本号
 
 
-## 启动jar架包命令 java -Dfile.encoding=utf-8 -jar xxx.jar
-## 运行javajar包：nohup java -Dfile.encoding=utf-8 -jar gateway-server-1.0-SNAPSHOT.jar &
+## 本地启动jar架包命令 java -Dfile.encoding=utf-8 -jar xxx.jar
+## 服务器运行java jar包：nohup java -Dfile.encoding=utf-8 -jar gateway-server-1.0-SNAPSHOT.jar &
 
 ## 运行nacos docker命令：docker run -d \
 -e PREFER_HOST_MODE=hostname \
