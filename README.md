@@ -81,6 +81,10 @@ npm run build:prod
 ## 本地启动jar架包命令 java -Dfile.encoding=utf-8 -jar xxx.jar
 ## 服务器运行java jar包：nohup java -Dfile.encoding=utf-8 -jar gateway-server-1.0-SNAPSHOT.jar &
 
+## docker安装jenkins: https://www.cnblogs.com/fuzongle/p/12834080.html
+## jenkins部署项目：https://www.bilibili.com/video/BV1xL411n7nz/?p=3&spm_id_from=pageDriver&vd_source=faac0c2e52329f987851035277338e12
+
+
 ## 运行nacos docker命令：docker run -d \
 -e PREFER_HOST_MODE=hostname \
 -e MODE=standalone \
@@ -94,3 +98,51 @@ npm run build:prod
 --name nacos-sa-mysql \
 --restart=always \
 nacos/nacos-server
+
+
+
+jenkins执行脚本:
+# 必须加，不然jenkins会kill应用程序
+export BUILD_ID=dontKillMe
+
+# 应用存放地址
+APP_HOME=/home
+
+# 应用名称
+APP_NAME=oauth-server-1.0-SNAPSHOT.jar
+
+# 获取PID
+```
+  PID=$(ps -ef | grep $APP_NAME | grep -v grep | awk '{ print $2 }')
+  if [ -z "$PID" ]; then
+    echo "进程不存在启动进程"
+    cd $APP_HOME
+    chmod 777 $APP_NAME
+    source /etc/profile
+    # 防止文件过大，导致jenkins卡死
+    cat /dev/null > nohup.out
+    # 这个命令就是启动jar工程的命令
+    nohup java -jar $APP_NAME > /dev/null 2>&1 &
+    if [ $? = 0 ]; then
+      sleep 1
+      tail -n 50 nohup.out
+    fi
+    echo "finished!!!"
+  else
+    echo "进程存在，杀死进程"
+    kill -9 $PID
+    echo $APP_NAME process stop, PID=$PID
+    cd $APP_HOME
+    chmod 777 $APP_NAME
+    source /etc/profile
+    # 防止文件过大，导致jenkins卡死
+    cat /dev/null > nohup.out
+    # 这个命令就是启动jar工程的命令
+    nohup java -jar $APP_NAME > /dev/null 2>&1 &
+    if [ $? = 0 ]; then
+      sleep 1
+      tail -n 50 nohup.out
+    fi
+    echo "finished!!!"
+  fi
+```
