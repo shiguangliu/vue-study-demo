@@ -83,7 +83,7 @@ npm run build:prod
 
 ## docker安装jenkins: https://www.cnblogs.com/fuzongle/p/12834080.html
 ## jenkins部署项目：https://www.bilibili.com/video/BV1xL411n7nz/?p=3&spm_id_from=pageDriver&vd_source=faac0c2e52329f987851035277338e12
-
+## jenkins关联github：https://liuhaoan.com/2022/08/19/Jenkins-Github%E5%AE%9E%E7%8E%B0%E6%8C%81%E7%BB%AD%E5%8C%96%E9%83%A8%E7%BD%B2%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E8%87%B3%E6%9C%8D%E5%8A%A1%E5%99%A8/
 
 ## 运行nacos docker命令：docker run -d \
 -e PREFER_HOST_MODE=hostname \
