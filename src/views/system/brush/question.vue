@@ -44,18 +44,18 @@
               </div>
               <div class="tab_answer_dv" >
                 <el-radio-group v-model="from.answer" v-show="currentTopic.type === 1 || currentTopic.type === 3">
-                  <el-radio v-if="currentTopic.optionA !== ''" label="A" style="display: block; padding-top: 10px;">{{currentTopic.optionA}}</el-radio>
-                  <el-radio v-if="currentTopic.optionB !== ''" label="B" style="display: block; padding-top: 10px;">{{currentTopic.optionB}}</el-radio>
-                  <el-radio v-if="currentTopic.optionC !== ''" label="C" style="display: block; padding-top: 10px;">{{currentTopic.optionC}}</el-radio>
-                  <el-radio v-if="currentTopic.optionD !== ''" label="D" style="display: block; padding-top: 10px;">{{currentTopic.optionD}}</el-radio>
-                  <el-radio v-if="currentTopic.optionE !== ''" label="E" style="display: block; padding-top: 10px;">{{currentTopic.optionE}}</el-radio>
+                  <el-radio v-if="currentTopic.optionA !== '' && currentTopic.optionA !== null" label="A" style="display: block; padding-top: 10px;">{{currentTopic.optionA}}</el-radio>
+                  <el-radio v-if="currentTopic.optionB !== '' && currentTopic.optionB !== null" label="B" style="display: block; padding-top: 10px;">{{currentTopic.optionB}}</el-radio>
+                  <el-radio v-if="currentTopic.optionC !== '' && currentTopic.optionC !== null" label="C" style="display: block; padding-top: 10px;">{{currentTopic.optionC}}</el-radio>
+                  <el-radio v-if="currentTopic.optionD !== '' && currentTopic.optionD !== null" label="D" style="display: block; padding-top: 10px;">{{currentTopic.optionD}}</el-radio>
+                  <el-radio v-if="currentTopic.optionE !== '' && currentTopic.optionE !== null" label="E" style="display: block; padding-top: 10px;">{{currentTopic.optionE}}</el-radio>
                 </el-radio-group>
                 <el-checkbox-group v-model="from.answers" v-show="currentTopic.type === 2">
-                  <el-checkbox v-if="currentTopic.optionA !== ''" label="A" style="display: block; padding-top: 10px;">{{currentTopic.optionA}}</el-checkbox>
-                  <el-checkbox v-if="currentTopic.optionB !== ''" label="B" style="display: block; padding-top: 10px;">{{currentTopic.optionB}}</el-checkbox>
-                  <el-checkbox v-if="currentTopic.optionC !== ''" label="C" style="display: block; padding-top: 10px;">{{currentTopic.optionC}}</el-checkbox>
-                  <el-checkbox v-if="currentTopic.optionD !== ''" label="D" style="display: block; padding-top: 10px;">{{currentTopic.optionD}}</el-checkbox>
-                  <el-checkbox v-if="currentTopic.optionE !== ''" label="E" style="display: block; padding-top: 10px;">{{currentTopic.optionE}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionA !== '' && currentTopic.optionA !== null" label="A" style="display: block; padding-top: 10px;">{{currentTopic.optionA}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionB !== '' && currentTopic.optionB !== null" label="B" style="display: block; padding-top: 10px;">{{currentTopic.optionB}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionC !== '' && currentTopic.optionC !== null" label="C" style="display: block; padding-top: 10px;">{{currentTopic.optionC}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionD !== '' && currentTopic.optionD !== null" label="D" style="display: block; padding-top: 10px;">{{currentTopic.optionD}}</el-checkbox>
+                  <el-checkbox v-if="currentTopic.optionE !== '' && currentTopic.optionE !== null" label="E" style="display: block; padding-top: 10px;">{{currentTopic.optionE}}</el-checkbox>
                 </el-checkbox-group>
               </div>
               <div class="buttonsbox" >
