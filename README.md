@@ -76,7 +76,7 @@ npm run build:prod
 ## 本地登录服务器ssh root@43.143.253.52 -p 22 输入密码lsg15781012.
 ## 本地打镜像为linux/amd64架构的镜像：docker build --platform=linux/x86_64 . -f scripts/goods/Dockerfile -t goods-server:latest
 ### docker build --platform=linux/x86_64 . -f dockerfile目录地址 -t 镜像名称:版本号
-
+## 第一次运行docker中redis镜像的时候设置密码：docker run -itd --name redis-test -p 6379:6379 redis --requirepass "llw123456"
 
 ## 本地启动jar架包命令 java -Dfile.encoding=utf-8 -jar xxx.jar
 ## 服务器运行java jar包：nohup java -Dfile.encoding=utf-8 -jar gateway-server-1.0-SNAPSHOT.jar &
