@@ -234,6 +234,7 @@ export default {
         } else {
           this.myAnswer = resultAnswer[0].answer || resultAnswer[0].answers
           this.rightAnswers = resultAnswer[0].rightAnswers
+          this.analysis = resultAnswer[0].analysis
           return true
         }
       }
