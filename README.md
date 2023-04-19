@@ -65,18 +65,7 @@ npm run build:prod
 ```
 
 
-## 到docker中运行命令 docker run -d -p 8080:80 <镜像名称> 比如：docker run -itd --name redis-test -p 6379:6379 redis
-# docker run -itd --name auth_repository -p 9401:9401 shiguangliu/auth_repository
-# docker run -itd --name gateway_repository -p 8090:8090 shiguangliu/gateway_repository
-# docker run -itd --name goods_repository -p 8011:8011 shiguangliu/goods_repository
-# docker run -itd --name user_repository -p 8010:8010 shiguangliu/user_repository
-# docker run -itd --name vue_demo_repository -p 8080:80 shiguangliu/vue_demo_repository
-# 重新启动docker容器 docker restart <容器名称> 比如：docker restart redis-test
-## 拉取dockerhub镜像 登录dockerhub账号，搜索镜像仓库ubuntu，选择对应的tag复制拉取命令，执行命令，查看镜像是否拉取成功
-## 本地登录服务器ssh root@43.143.253.52 -p 22 输入密码lsg15781012.
-## 本地打镜像为linux/amd64架构的镜像：docker build --platform=linux/x86_64 . -f scripts/goods/Dockerfile -t goods-server:latest
-### docker build --platform=linux/x86_64 . -f dockerfile目录地址 -t 镜像名称:版本号
-## 第一次运行docker中redis镜像的时候设置密码：docker run -itd --name redis-test -p 6379:6379 redis --requirepass "llw123456"
+
 
 ## 本地启动jar架包命令 java -Dfile.encoding=utf-8 -jar xxx.jar
 ## 服务器运行java jar包：nohup java -Dfile.encoding=utf-8 -jar gateway-server-1.0-SNAPSHOT.jar &
@@ -84,21 +73,6 @@ npm run build:prod
 ## docker安装jenkins: https://www.cnblogs.com/fuzongle/p/12834080.html
 ## jenkins部署项目：https://www.bilibili.com/video/BV1xL411n7nz/?p=3&spm_id_from=pageDriver&vd_source=faac0c2e52329f987851035277338e12
 ## jenkins关联github：https://liuhaoan.com/2022/08/19/Jenkins-Github%E5%AE%9E%E7%8E%B0%E6%8C%81%E7%BB%AD%E5%8C%96%E9%83%A8%E7%BD%B2%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E8%87%B3%E6%9C%8D%E5%8A%A1%E5%99%A8/
-
-## 运行nacos docker命令：docker run -d \
--e PREFER_HOST_MODE=hostname \
--e MODE=standalone \
--e SPRING_DATASOURCE_PLATFORM=mysql \
--e MYSQL_SERVICE_HOST=43.143.253.52 \
--e MYSQL_SERVICE_PORT=3306 \
--e MYSQL_SERVICE_USER=root \
--e MYSQL_SERVICE_PASSWORD=123456 \
--e MYSQL_SERVICE_DB_NAME=nacos_config \
--p 8848:8848 \
---name nacos-sa-mysql \
---restart=always \
-nacos/nacos-server
-
 
 
 jenkins执行脚本:
