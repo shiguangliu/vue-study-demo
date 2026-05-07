@@ -29,7 +29,7 @@
       <el-col :span="18" :xs="24">
         <el-card>
           <div slot="header" class="clearfix" style="text-align: center">
-            <span>考试题目<label v-if="safetyCount === 70">({{ score }}分)</label></span>
+            <span>考试题目<label v-if="safetyCount === total">({{ score }}分)</label></span>
           </div>
           <div class="exam_main">
             <div class="exam_main_home">
