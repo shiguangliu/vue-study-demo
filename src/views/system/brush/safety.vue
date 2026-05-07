@@ -29,7 +29,7 @@
       <el-col :span="18" :xs="24">
         <el-card>
           <div slot="header" class="clearfix" style="text-align: center">
-            <span>考试题目</span>
+            <span>考试题目<label v-if="safetyCount === 100">({{ score }}分)</label></span>
           </div>
           <div class="exam_main">
             <div class="exam_main_home">
@@ -108,7 +108,10 @@ export default {
       },
       myAnswer: '', // 我的答案
       rightAnswers: '', // 正确答案
-      analysis: '' // 解析
+      analysis: '', // 解析
+      // 已经答的总题数
+      safetyCount: 0,
+      score: 0 // 分数
     };
   },
   created() {
@@ -214,6 +217,31 @@ export default {
           rightAnswers: res.data.answer, // 正确答案
           analysis: res.data.analysis // 解析
         })
+        if (true === res.data.flag) {
+          if (this.tabNo <= 30) {
+            this.score += 1
+          }
+          if (this.tabNo > 30 && this.tabNo <= 60) {
+            this.score += 1.5
+          }
+          if (this.tabNo > 60 && this.tabNo <= 70) {
+            this.score += 2.5
+          }
+        } else {
+          if (this.tabNo > 60 && this.tabNo <= 70) {
+            const rightAnswers = res.data.answer.split('')
+            const userAnswers = this.form.answer.split('')
+
+            const matchCount = userAnswers.filter(item =>
+              rightAnswers.includes(item)
+            ).length
+
+            if (matchCount > 0) {
+              this.score += 0.5
+            }
+          }
+        }
+        this.safetyCount += 1
       })
     },
     displayPrevQuestion(){
