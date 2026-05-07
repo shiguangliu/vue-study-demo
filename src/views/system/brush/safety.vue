@@ -4,7 +4,7 @@
       <el-col :span="6" :xs="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix" style="text-align: center">
-            <span>考题</span>
+            <span>考题<label v-if="safetyCount === total">(<strong style="color: red;">{{ score }}</strong>分)</label></span>
           </div>
           <div class="remark" style="position: relative" >
             <i class="cur"></i>
@@ -29,7 +29,7 @@
       <el-col :span="18" :xs="24">
         <el-card>
           <div slot="header" class="clearfix" style="text-align: center">
-            <span>考试题目<label v-if="safetyCount === total">({{ score }}分)</label></span>
+            <span>考试题目</span>
           </div>
           <div class="exam_main">
             <div class="exam_main_home">
@@ -217,6 +217,7 @@ export default {
           rightAnswers: res.data.answer, // 正确答案
           analysis: res.data.analysis // 解析
         })
+        this.safetyCount += 1
         if (true === res.data.flag) {
           if (this.tabNo <= 30) {
             this.score += 1
@@ -241,7 +242,6 @@ export default {
             }
           }
         }
-        this.safetyCount += 1
       })
     },
     displayPrevQuestion(){
